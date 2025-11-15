@@ -1,4 +1,4 @@
-// src/pages/ForgotPassword.jsx
+// src/pages/ForgotPassword.jsx - CODE COMPLET
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
@@ -30,7 +30,7 @@ export default function ForgotPassword() {
             if (error) {
                 setError('Une erreur est survenue. Vérifiez votre email.')
             } else {
-                setMessage('Un email de réinitialisation a été envoyé à votre adresse email. Vérifiez votre boîte de réception.')
+                setMessage('Un email de réinitialisation a été envoyé à votre adresse. Cliquez sur le lien dans l\'email pour créer un nouveau mot de passe. Le lien est valide pendant 1 heure.')
             }
         } catch (err) {
             setError('Une erreur est survenue')
