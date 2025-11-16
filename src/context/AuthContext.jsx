@@ -1,4 +1,4 @@
-// src/context/AuthContext.jsx
+// src/context/AuthContext.jsx - CODE COMPLET MIS À JOUR
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../config/supabaseClient'
 
@@ -27,45 +27,85 @@ export const AuthProvider = ({ children }) => {
 
     // Inscription
     const signUp = async (email, password, userData) => {
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: userData
-            }
-        })
-        return { data, error }
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: userData,
+                    emailRedirectTo: `${window.location.origin}/dashboard`
+                }
+            })
+            return { data, error }
+        } catch (error) {
+            console.error('Erreur signup:', error)
+            return { data: null, error }
+        }
     }
 
     // Connexion
     const signIn = async (email, password) => {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
-        })
-        return { data, error }
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            })
+            return { data, error }
+        } catch (error) {
+            console.error('Erreur signin:', error)
+            return { data: null, error }
+        }
     }
 
     // Déconnexion
     const signOut = async () => {
-        const { error } = await supabase.auth.signOut()
-        return { error }
+        try {
+            const { error } = await supabase.auth.signOut()
+            return { error }
+        } catch (error) {
+            console.error('Erreur signout:', error)
+            return { error }
+        }
     }
 
     // Réinitialisation du mot de passe
     const resetPassword = async (email) => {
-        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/update-password`,
-        })
-        return { data, error }
+        try {
+            const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/update-password`
+            })
+
+            if (error) {
+                console.error('Erreur reset password:', error)
+            } else {
+                console.log('Email de réinitialisation envoyé avec succès')
+            }
+
+            return { data, error }
+        } catch (error) {
+            console.error('Erreur reset password:', error)
+            return { data: null, error }
+        }
     }
 
     // Mettre à jour le mot de passe
     const updatePassword = async (newPassword) => {
-        const { data, error } = await supabase.auth.updateUser({
-            password: newPassword
-        })
-        return { data, error }
+        try {
+            const { data, error } = await supabase.auth.updateUser({
+                password: newPassword
+            })
+
+            if (error) {
+                console.error('Erreur update password:', error)
+            } else {
+                console.log('Mot de passe mis à jour avec succès')
+            }
+
+            return { data, error }
+        } catch (error) {
+            console.error('Erreur update password:', error)
+            return { data: null, error }
+        }
     }
 
     const value = {

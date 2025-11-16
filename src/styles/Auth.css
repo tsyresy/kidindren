@@ -1,4 +1,13 @@
-/* src/styles/Auth.css - CODE COMPLET */
+/* src/styles/Auth.css - PAYVILUS THEME - CODE COMPLET */
+
+/* ===== VARIABLES CSS ===== */
+:root {
+    --payvilus-primary: #16f98a;
+    --payvilus-light: #F8F8F8;
+    --payvilus-dark: #010F1B;
+    --payvilus-darker: #05220B;
+    --payvilus-accent: #3EF0D0;
+}
 
 /* ===== CONTENEUR PRINCIPAL ===== */
 .auth-container {
@@ -6,7 +15,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--payvilus-darker) 0%, var(--payvilus-dark) 100%);
     padding: 20px;
 }
 
@@ -15,10 +24,11 @@
     background: white;
     border-radius: 16px;
     padding: 40px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(22, 249, 138, 0.2);
     width: 100%;
     max-width: 450px;
     animation: slideUp 0.4s ease-out;
+    border: 2px solid var(--payvilus-primary);
 }
 
 .register-card {
@@ -43,9 +53,10 @@
 /* ===== TITRES ET SOUS-TITRES ===== */
 .auth-card h1 {
     margin: 0 0 10px 0;
-    color: #333;
+    color: var(--payvilus-dark);
     font-size: 28px;
     text-align: center;
+    font-weight: 700;
 }
 
 .subtitle {
@@ -59,14 +70,14 @@
 .form-section {
     margin-bottom: 30px;
     padding: 20px;
-    background: #f8f9fa;
+    background: var(--payvilus-light);
     border-radius: 12px;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid var(--payvilus-primary);
 }
 
 .section-title {
     margin: 0 0 20px 0;
-    color: #667eea;
+    color: var(--payvilus-dark);
     font-size: 18px;
     font-weight: 600;
     display: flex;
@@ -88,7 +99,7 @@
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    color: #333;
+    color: var(--payvilus-dark);
     font-weight: 500;
     font-size: 14px;
 }
@@ -106,8 +117,8 @@
 
 .form-group input:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: var(--payvilus-primary);
+    box-shadow: 0 0 0 3px rgba(22, 249, 138, 0.1);
 }
 
 .form-group select {
@@ -124,8 +135,8 @@
 
 .form-group select:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: var(--payvilus-primary);
+    box-shadow: 0 0 0 3px rgba(22, 249, 138, 0.1);
 }
 
 .input-hint {
@@ -140,12 +151,12 @@
 .btn-primary {
     width: 100%;
     padding: 14px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--payvilus-primary) 0%, var(--payvilus-accent) 100%);
+    color: var(--payvilus-dark);
     border: none;
     border-radius: 8px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     margin-top: 10px;
@@ -153,7 +164,7 @@
 
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 10px 25px rgba(22, 249, 138, 0.4);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -168,18 +179,18 @@
 .btn-link {
     display: inline-block;
     padding: 10px 20px;
-    background: #667eea;
-    color: white;
+    background: var(--payvilus-primary);
+    color: var(--payvilus-dark);
     text-decoration: none;
     border-radius: 8px;
-    font-weight: 600;
+    font-weight: 700;
     transition: all 0.3s ease;
 }
 
 .btn-link:hover {
-    background: #764ba2;
+    background: var(--payvilus-accent);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 5px 15px rgba(22, 249, 138, 0.3);
 }
 
 /* ===== LIENS D'AUTHENTIFICATION ===== */
@@ -192,14 +203,15 @@
 }
 
 .auth-links a {
-    color: #667eea;
+    color: var(--payvilus-primary);
     text-decoration: none;
     font-size: 14px;
     transition: color 0.2s ease;
+    font-weight: 500;
 }
 
 .auth-links a:hover {
-    color: #764ba2;
+    color: var(--payvilus-accent);
     text-decoration: underline;
 }
 
@@ -215,18 +227,18 @@
 }
 
 .success-message {
-    background-color: #efe;
-    color: #2a7;
+    background-color: rgba(22, 249, 138, 0.1);
+    color: var(--payvilus-darker);
     padding: 12px 15px;
     border-radius: 8px;
     margin-bottom: 20px;
     font-size: 14px;
-    border-left: 4px solid #2a7;
+    border-left: 4px solid var(--payvilus-primary);
     text-align: center;
 }
 
 .success-message h2 {
-    color: #2a7;
+    color: var(--payvilus-dark);
     margin: 0 0 10px 0;
     font-size: 20px;
 }
@@ -248,8 +260,8 @@
 .loading-spinner-small {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(102, 126, 234, 0.3);
-    border-top-color: #667eea;
+    border: 3px solid rgba(22, 249, 138, 0.3);
+    border-top-color: var(--payvilus-primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 15px;

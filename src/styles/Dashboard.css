@@ -1,39 +1,22 @@
-/* src/styles/Dashboard.css */
+/* src/styles/Dashboard.css - PAYVILUS THEME - CODE COMPLET */
+
+/* ===== VARIABLES CSS ===== */
+:root {
+    --payvilus-primary: #16f98a;
+    --payvilus-light: #F8F8F8;
+    --payvilus-dark: #010F1B;
+    --payvilus-darker: #05220B;
+    --payvilus-accent: #3EF0D0;
+}
+
+/* ===== CONTENEUR PRINCIPAL ===== */
 .dashboard-container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--payvilus-darker) 0%, var(--payvilus-dark) 100%);
     padding: 20px;
 }
 
-.loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    color: white;
-}
-
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.loading-container p {
-    margin-top: 20px;
-    font-size: 18px;
-}
-
+/* ===== HEADER DU DASHBOARD ===== */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -42,13 +25,15 @@
     padding: 20px;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(22, 249, 138, 0.1);
+    border-left: 4px solid var(--payvilus-primary);
 }
 
 .dashboard-header h1 {
     margin: 0;
-    color: #333;
+    color: var(--payvilus-dark);
     font-size: 28px;
+    font-weight: 700;
 }
 
 .btn-logout {
@@ -69,18 +54,21 @@
     box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
 }
 
+/* ===== CONTENU DU DASHBOARD ===== */
 .dashboard-content {
     max-width: 1000px;
     margin: 0 auto;
 }
 
+/* ===== CARTE DE PROFIL ===== */
 .profile-card {
     background: white;
     border-radius: 16px;
     padding: 0;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 40px rgba(22, 249, 138, 0.15);
     overflow: hidden;
     animation: fadeIn 0.5s ease-out;
+    border: 2px solid var(--payvilus-primary);
 }
 
 @keyframes fadeIn {
@@ -94,17 +82,18 @@
     }
 }
 
+/* ===== HEADER DU PROFIL ===== */
 .profile-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--payvilus-primary) 0%, var(--payvilus-accent) 100%);
     padding: 40px;
     text-align: center;
-    color: white;
+    color: var(--payvilus-dark);
 }
 
 .profile-avatar {
     width: 100px;
     height: 100px;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(1, 15, 27, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -112,34 +101,51 @@
     font-size: 40px;
     font-weight: bold;
     margin: 0 auto 20px;
-    border: 4px solid white;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    border: 4px solid var(--payvilus-dark);
+    box-shadow: 0 8px 20px rgba(1, 15, 27, 0.3);
+    color: var(--payvilus-dark);
 }
 
 .profile-header h2 {
     margin: 0;
     font-size: 26px;
-    font-weight: 600;
+    font-weight: 700;
+    color: var(--payvilus-dark);
 }
 
 .profile-email {
     margin: 8px 0 0 0;
     font-size: 16px;
-    opacity: 0.9;
+    opacity: 0.8;
+    color: var(--payvilus-dark);
 }
 
+/* ===== INFORMATIONS DU PROFIL ===== */
 .profile-info {
     padding: 40px;
 }
 
-.profile-info h3 {
-    margin: 0 0 25px 0;
-    color: #333;
-    font-size: 20px;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
+.info-section {
+    margin-bottom: 35px;
 }
 
+.info-section:last-child {
+    margin-bottom: 0;
+}
+
+.info-section h3 {
+    margin: 0 0 20px 0;
+    color: var(--payvilus-dark);
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid var(--payvilus-primary);
+    padding-bottom: 12px;
+}
+
+/* ===== GRILLE D'INFORMATIONS ===== */
 .info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -151,14 +157,15 @@
     flex-direction: column;
     gap: 6px;
     padding: 15px;
-    background: #f8f9fa;
+    background: var(--payvilus-light);
     border-radius: 10px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 3px solid var(--payvilus-primary);
 }
 
 .info-item:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(22, 249, 138, 0.15);
 }
 
 .info-item.full-width {
@@ -175,10 +182,42 @@
 
 .info-value {
     font-size: 16px;
-    color: #333;
+    color: var(--payvilus-dark);
+    font-weight: 600;
+}
+
+/* ===== LOADING ===== */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--payvilus-primary);
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(22, 249, 138, 0.3);
+    border-top-color: var(--payvilus-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-container p {
+    margin-top: 20px;
+    font-size: 18px;
     font-weight: 500;
 }
 
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .dashboard-header {
         flex-direction: column;
