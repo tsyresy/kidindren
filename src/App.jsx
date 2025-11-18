@@ -1,4 +1,4 @@
-// src/App.jsx - CODE COMPLET
+// src/App.jsx - CODE COMPLET MIS À JOUR
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -7,6 +7,9 @@ import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import UpdatePassword from './pages/UpdatePassword'
 import Dashboard from './pages/Dashboard'
+import Paypal from './pages/Paypal'
+import { Formation } from './pages/Formation'
+import { About } from './pages/About'
 
 function App() {
     return (
@@ -28,6 +31,30 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <Dashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/paypal"
+                        element={
+                            <ProtectedRoute>
+                                <Paypal />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/formation"
+                        element={
+                            <ProtectedRoute>
+                                <Formation />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/about"
+                        element={
+                            <ProtectedRoute>
+                                <About />
                             </ProtectedRoute>
                         }
                     />
