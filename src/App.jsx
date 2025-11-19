@@ -1,11 +1,16 @@
-// src/App.jsx - CODE COMPLET MIS À JOUR
+// src/App.jsx - CODE COMPLET CORRIGÉ
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+
+// Pages publiques
+import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import UpdatePassword from './pages/UpdatePassword'
+
+// Pages protégées
 import Dashboard from './pages/Dashboard'
 import Paypal from './pages/Paypal'
 import { Formation } from './pages/Formation'
@@ -16,16 +21,19 @@ function App() {
         <Router>
             <AuthProvider>
                 <Routes>
-                    {/* Redirection par défaut vers login */}
-                    <Route path="/" element={<Navigate to="/login" replace />} />
+                    {/* Route par défaut - Landing page */}
+                    <Route path="/" element={<Landing />} />
 
-                    {/* Routes publiques */}
+                    {/* Routes publiques - Landing */}
+                    <Route path="/landing" element={<Landing />} />
+
+                    {/* Routes publiques - Authentification */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/update-password" element={<UpdatePassword />} />
 
-                    {/* Routes protégées */}
+                    {/* Routes protégées - Dashboard principal */}
                     <Route
                         path="/dashboard"
                         element={
@@ -34,6 +42,8 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
+
+                    {/* Routes protégées - Services */}
                     <Route
                         path="/paypal"
                         element={
@@ -59,8 +69,8 @@ function App() {
                         }
                     />
 
-                    {/* Route 404 */}
-                    <Route path="*" element={<Navigate to="/login" replace />} />
+                    {/* Redirection pour les routes invalides */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </AuthProvider>
         </Router>

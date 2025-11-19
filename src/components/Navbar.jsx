@@ -25,7 +25,7 @@ export default function Navbar() {
                 {/* Logo */}
                 <Link to="/dashboard" className="navbar-logo">
                     <img
-                        src="https://res.cloudinary.com/djillj6xt/image/upload/v1763394595/CL-B-3_sigqnz.png"
+                        src="https://res.cloudinary.com/djillj6xt/image/upload/v1763394595/CL-B-2_f74cod.png"
                         alt="Payvilus Logo"
                         className="logo-image"
                     />
