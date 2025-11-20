@@ -1,0 +1,318 @@
+/* src/styles/Membership.css */
+
+:root {
+    --payvilus-primary: #16f98a;
+    --payvilus-light: #F8F8F8;
+    --payvilus-dark: #010F1B;
+    --payvilus-darker: #05220B;
+    --payvilus-accent: #3EF0D0;
+}
+
+/* ===== MEMBERSHIP BADGE ===== */
+.membership-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 2px solid;
+    border-radius: 20px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.membership-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.badge-icon {
+    font-size: 1.2rem;
+}
+
+.badge-label {
+    font-weight: 700;
+}
+
+/* ===== SUBSCRIPTION LAYOUT ===== */
+.subscription-layout {
+    min-height: 100vh;
+    background: var(--payvilus-light);
+    display: flex;
+    flex-direction: column;
+}
+
+.subscription-main {
+    flex: 1;
+    padding: 3rem 2rem;
+}
+
+/* ===== SUBSCRIPTION CONTAINER ===== */
+.subscription-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ===== CURRENT PLAN SECTION ===== */
+.current-plan-section {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid var(--payvilus-primary);
+}
+
+.current-plan-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.current-plan-icon {
+    font-size: 3rem;
+}
+
+.current-plan-info h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--payvilus-dark);
+    font-size: 1.8rem;
+}
+
+.current-plan-info p {
+    margin: 0;
+    color: #666;
+}
+
+.plan-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.plan-detail-item {
+    padding: 1.5rem;
+    background: var(--payvilus-light);
+    border-radius: 8px;
+}
+
+.plan-detail-label {
+    font-size: 0.85rem;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.plan-detail-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--payvilus-dark);
+}
+
+.plan-features-list {
+    list-style: none;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.plan-features-list li {
+    padding: 0.75rem 0;
+    color: var(--payvilus-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.plan-features-list li::before {
+    content: '✓';
+    color: var(--payvilus-primary);
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* ===== PLAN CARDS ===== */
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.plan-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.plan-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.plan-card.current {
+    border: 2px solid var(--payvilus-primary);
+    box-shadow: 0 0 20px rgba(22, 249, 138, 0.2);
+}
+
+.plan-card-header {
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
+    color: var(--payvilus-dark);
+    text-align: center;
+}
+
+.plan-card-header h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.plan-card-header .icon {
+    font-size: 2rem;
+}
+
+.plan-card-body {
+    padding: 2rem;
+}
+
+.plan-price {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+}
+
+.plan-price-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--payvilus-dark);
+}
+
+.plan-price-currency {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.plan-price-period {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 0.5rem;
+}
+
+.plan-features {
+    list-style: none;
+    margin-bottom: 2rem;
+}
+
+.plan-features li {
+    padding: 0.75rem 0;
+    color: #333;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.plan-features li::before {
+    content: '✓';
+    color: var(--payvilus-primary);
+    font-weight: 700;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.plan-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn-subscribe {
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+.btn-subscribe-primary {
+    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
+    color: var(--payvilus-dark);
+}
+
+.btn-subscribe-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(22, 249, 138, 0.3);
+}
+
+.btn-subscribe-secondary {
+    background: transparent;
+    color: var(--payvilus-dark);
+    border: 2px solid var(--payvilus-dark);
+}
+
+.btn-subscribe-secondary:hover {
+    background: var(--payvilus-light);
+}
+
+.btn-subscribe-cancel {
+    background: #ff6b6b;
+    color: white;
+}
+
+.btn-subscribe-cancel:hover {
+    background: #ee5a52;
+}
+
+.btn-subscribe:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.plan-current-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--payvilus-primary);
+    color: var(--payvilus-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .current-plan-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .current-plan-info h2 {
+        font-size: 1.5rem;
+    }
+
+    .plan-details {
+        grid-template-columns: 1fr;
+    }
+
+    .plans-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,6 +1,9 @@
 // src/components/Navbar.jsx
 import { Link, useLocation } from 'react-router-dom'
+import { Box, Button, AppBar, Toolbar, Container, Stack } from '@mui/material'
+import LogoutIcon from '@mui/icons-material/Logout'
 import { useAuth } from '../context/AuthContext'
+import MembershipBadge from './MembershipBadge'
 import '../styles/Components.css'
 
 export default function Navbar() {
@@ -20,58 +23,153 @@ export default function Navbar() {
     const isActive = (path) => location.pathname === path
 
     return (
-        <nav className="navbar">
-            <div className="navbar-container">
-                {/* Logo */}
-                <Link to="/dashboard" className="navbar-logo">
-                    <img
-                        src="https://res.cloudinary.com/djillj6xt/image/upload/v1763394595/CL-B-2_f74cod.png"
-                        alt="Payvilus Logo"
-                        className="logo-image"
-                    />
-                </Link>
+        <AppBar
+            position="sticky"
+            sx={{
+                background: 'white',
+                boxShadow: '0 2px 10px rgba(22, 249, 138, 0.1)',
+                borderBottom: '2px solid #16f98a'
+            }}
+        >
+            <Container maxWidth="lg">
+                <Toolbar disableGutters sx={{ justifyContent: 'space-between', py: 1 }}>
+                    {/* Logo */}
+                    <Link to="/dashboard" style={{ textDecoration: 'none' }}>
+                        <img
+                            src="https://res.cloudinary.com/djillj6xt/image/upload/v1763394595/CL-B-3_sigqnz.png"
+                            alt="Payvilus Logo"
+                            style={{ height: '50px', width: 'auto', cursor: 'pointer' }}
+                        />
+                    </Link>
 
-                {/* Menu Navigation */}
-                <div className="navbar-menu">
-                    <Link
-                        to="/dashboard"
-                        className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
-                    >
-                        Dashboard
-                    </Link>
-                    <Link
-                        to="/paypal"
-                        className={`nav-link ${isActive('/paypal') ? 'active' : ''}`}
-                    >
-                        PayPal
-                    </Link>
-                    <Link
-                        to="/formation"
-                        className={`nav-link ${isActive('/formation') ? 'active' : ''}`}
-                    >
-                        Formation
-                    </Link>
-                    <Link
-                        to="/about"
-                        className={`nav-link ${isActive('/about') ? 'active' : ''}`}
-                    >
-                        À propos
-                    </Link>
-                </div>
+                    {/* Menu Navigation */}
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Button
+                            component={Link}
+                            to="/dashboard"
+                            sx={{
+                                color: isActive('/dashboard') ? '#16f98a' : '#010F1B',
+                                fontWeight: 600,
+                                fontSize: '1rem',
+                                textTransform: 'capitalize',
+                                borderBottom: isActive('/dashboard') ? '2px solid #16f98a' : 'none',
+                                pb: 0.5,
+                                '&:hover': { color: '#16f98a' }
+                            }}
+                        >
+                            Dashboard
+                        </Button>
+                        <Button
+                            component={Link}
+                            to="/paypal"
+                            sx={{
+                                color: isActive('/paypal') ? '#16f98a' : '#010F1B',
+                                fontWeight: 600,
+                                fontSize: '1rem',
+                                textTransform: 'capitalize',
+                                borderBottom: isActive('/paypal') ? '2px solid #16f98a' : 'none',
+                                pb: 0.5,
+                                '&:hover': { color: '#16f98a' }
+                            }}
+                        >
+                            PayPal
+                        </Button>
+                        <Button
+                            component={Link}
+                            to="/formation"
+                            sx={{
+                                color: isActive('/formation') ? '#16f98a' : '#010F1B',
+                                fontWeight: 600,
+                                fontSize: '1rem',
+                                textTransform: 'capitalize',
+                                borderBottom: isActive('/formation') ? '2px solid #16f98a' : 'none',
+                                pb: 0.5,
+                                '&:hover': { color: '#16f98a' }
+                            }}
+                        >
+                            Formation
+                        </Button>
+                        <Button
+                            component={Link}
+                            to="/about"
+                            sx={{
+                                color: isActive('/about') ? '#16f98a' : '#010F1B',
+                                fontWeight: 600,
+                                fontSize: '1rem',
+                                textTransform: 'capitalize',
+                                borderBottom: isActive('/about') ? '2px solid #16f98a' : 'none',
+                                pb: 0.5,
+                                '&:hover': { color: '#16f98a' }
+                            }}
+                        >
+                            À propos
+                        </Button>
+                    </Box>
 
-                {/* Profil utilisateur */}
-                <div className="navbar-profile">
-                    <div className="profile-info">
-                        <div className="profile-avatar-small">
-                            {initials}
-                        </div>
-                        <span className="profile-name">{fullName}</span>
-                    </div>
-                    <button onClick={handleLogout} className="btn-logout-nav">
-                        Déconnexion
-                    </button>
-                </div>
-            </div>
-        </nav>
+                    {/* Profil utilisateur */}
+                    <Stack direction="row" spacing={1.5} alignItems="center">
+                        {/* Badge Membership */}
+                        <MembershipBadge />
+
+                        {/* Avatar et Nom */}
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.75
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: 40,
+                                    height: 40,
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(135deg, #16f98a, #3EF0D0)',
+                                    color: '#010F1B',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontWeight: 700,
+                                    fontSize: '14px'
+                                }}
+                            >
+                                {initials}
+                            </Box>
+                            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                                <Box sx={{
+                                    color: '#010F1B',
+                                    fontWeight: 600,
+                                    fontSize: '14px',
+                                    lineHeight: 1.2
+                                }}>
+                                    {fullName}
+                                </Box>
+                            </Box>
+                        </Box>
+
+                        {/* Bouton Déconnexion */}
+                        <Button
+                            onClick={handleLogout}
+                            variant="outlined"
+                            size="small"
+                            startIcon={<LogoutIcon />}
+                            sx={{
+                                borderColor: '#dc3545',
+                                color: '#dc3545',
+                                fontWeight: 600,
+                                fontSize: '0.85rem',
+                                '&:hover': {
+                                    backgroundColor: '#dc3545',
+                                    color: 'white',
+                                    borderColor: '#dc3545'
+                                }
+                            }}
+                        >
+                            Déconnexion
+                        </Button>
+                    </Stack>
+                </Toolbar>
+            </Container>
+        </AppBar>
     )
 }

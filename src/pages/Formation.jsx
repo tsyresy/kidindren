@@ -1,23 +1,31 @@
-// src/pages/Formation.jsx
+// src/pages/Formation.jsx - CODE COMPLET
+import { Box, Container, Typography } from '@mui/material'
 import Navbar from '../components/Navbar'
-import '../styles/Components.css'
 
-
-export function Formation() {
+export default function Formation() {
     return (
-        <div className="dashboard-layout">
+        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <Navbar />
-            <main className="dashboard-main" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
-                <h1 style={{ fontSize: '3rem', color: '#010F1B', marginBottom: '1rem' }}>
-                    <span className="text-gradient">Formations</span> Digital
-                </h1>
-                <p style={{ fontSize: '1.2rem', color: '#666', marginBottom: '2rem' }}>
+            <Container maxWidth="md" sx={{ py: 8, textAlign: 'center', flex: 1 }}>
+                <Typography variant="h3" sx={{ mb: 2, fontWeight: 700, color: '#010F1B' }}>
+                    Formations{' '}
+                    <span
+                        style={{
+                            background: 'linear-gradient(135deg, #16f98a, #3EF0D0)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                        }}
+                    >
+            Digital
+          </span>
+                </Typography>
+                <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
                     Page en construction... 🚧
-                </p>
-                <p style={{ color: '#666' }}>
+                </Typography>
+                <Typography color="text.secondary">
                     Découvrez bientôt nos formations certifiantes
-                </p>
-            </main>
-        </div>
+                </Typography>
+            </Container>
+        </Box>
     )
 }

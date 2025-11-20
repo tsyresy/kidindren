@@ -1,4 +1,4 @@
-// src/App.jsx - CODE COMPLET CORRIGÉ
+// src/App.jsx - CODE COMPLET MIS À JOUR
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -13,8 +13,9 @@ import UpdatePassword from './pages/UpdatePassword'
 // Pages protégées
 import Dashboard from './pages/Dashboard'
 import Paypal from './pages/Paypal'
-import { Formation } from './pages/Formation'
-import { About } from './pages/About'
+import Subscription from './pages/Subscription'
+import Formation from './pages/Formation'
+import About from './pages/About'
 
 function App() {
     return (
@@ -44,6 +45,14 @@ function App() {
                     />
 
                     {/* Routes protégées - Services */}
+                    <Route
+                        path="/subscription"
+                        element={
+                            <ProtectedRoute>
+                                <Subscription />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route
                         path="/paypal"
                         element={
