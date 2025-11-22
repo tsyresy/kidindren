@@ -17,6 +17,10 @@ import Subscription from './pages/Subscription'
 import Formation from './pages/Formation'
 import About from './pages/About'
 
+// Flows de transaction
+import DepositFlow from './pages/deposit-flow'
+import WithdrawalFlow from './pages/withdrawal-flow'
+
 function App() {
     return (
         <Router>
@@ -61,6 +65,25 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
+
+                    {/* Routes protégées - Transactions */}
+                    <Route
+                        path="/paypal/deposit"
+                        element={
+                            <ProtectedRoute>
+                                <DepositFlow />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/paypal/withdrawal"
+                        element={
+                            <ProtectedRoute>
+                                <WithdrawalFlow />
+                            </ProtectedRoute>
+                        }
+                    />
+
                     <Route
                         path="/formation"
                         element={

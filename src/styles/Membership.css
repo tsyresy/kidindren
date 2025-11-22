@@ -1,4 +1,4 @@
-/* src/styles/Membership.css */
+/* src/styles/Membership.css - MIS À JOUR POUR NOUVEAU DESIGN */
 
 :root {
     --payvilus-primary: #16f98a;
@@ -36,283 +36,358 @@
     font-weight: 700;
 }
 
-/* ===== SUBSCRIPTION LAYOUT ===== */
-.subscription-layout {
-    min-height: 100vh;
-    background: var(--payvilus-light);
+/* ===== PRICING CARDS ===== */
+.pricing-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pricing-card.highlight {
+    z-index: 2;
+}
+
+.pricing-card.current {
+    position: relative;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes pulse-border {
+    0%, 100% {
+        box-shadow: 0 20px 60px rgba(255, 215, 0, 0.6), 0 0 0 3px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 25px 70px rgba(255, 215, 0, 0.8), 0 0 0 5px rgba(255, 215, 0, 0.5);
+    }
+}
+
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 20px 60px rgba(22, 249, 138, 0.6), 0 0 0 3px rgba(22, 249, 138, 0.3);
+    }
+    50% {
+        box-shadow: 0 25px 70px rgba(22, 249, 138, 0.8), 0 0 0 5px rgba(22, 249, 138, 0.5);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Animations Sparkle */
+@keyframes sparkle-0 {
+    0%, 100% {
+        transform: scale(0) translateY(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.5) translateY(-20px);
+        opacity: 1;
+    }
+}
+
+@keyframes sparkle-1 {
+    0%, 100% {
+        transform: scale(0) translateX(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) translateX(15px);
+        opacity: 1;
+    }
+}
+
+@keyframes sparkle-2 {
+    0%, 100% {
+        transform: scale(0) translate(0, 0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1) translate(-15px, 15px);
+        opacity: 1;
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 960px) {
+    .pricing-card.highlight {
+        transform: scale(1) !important;
+    }
+
+    .pricing-card:hover {
+        transform: scale(1) !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .pricing-card {
+        padding: 2rem !important;
+    }
+}
+
+/* ===== UTILITAIRES ===== */
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-item {
     display: flex;
-    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
 }
 
-.subscription-main {
+.feature-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-text {
     flex: 1;
-    padding: 3rem 2rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
-/* ===== SUBSCRIPTION CONTAINER ===== */
-.subscription-container {
+/* ===== BOUTONS ===== */
+.cta-button {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    text-transform: none;
+}
+
+.cta-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.cta-primary {
+    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
+    color: var(--payvilus-dark);
+}
+
+.cta-secondary {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: var(--payvilus-light);
+}
+
+.cta-highlight {
+    background: white;
+    color: var(--payvilus-primary);
+}
+
+/* ===== BADGES ===== */
+.current-plan-badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: var(--payvilus-dark);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.popular-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--payvilus-dark);
+    padding: 0.4rem 1rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+}
+
+/* ===== EFFETS DE CARTE ===== */
+.card-glow {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-glow::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(22, 249, 138, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card-glow:hover::before {
+    opacity: 1;
+}
+
+/* ===== GRILLES ET LAYOUTS ===== */
+.plans-container {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 4rem 2rem;
 }
 
-/* ===== CURRENT PLAN SECTION ===== */
-.current-plan-section {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 16px;
-    margin-bottom: 3rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid var(--payvilus-primary);
+.plans-header {
+    text-align: center;
+    margin-bottom: 4rem;
 }
 
-.current-plan-header {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.current-plan-icon {
-    font-size: 3rem;
-}
-
-.current-plan-info h2 {
-    margin: 0 0 0.5rem 0;
-    color: var(--payvilus-dark);
-    font-size: 1.8rem;
-}
-
-.current-plan-info p {
-    margin: 0;
-    color: #666;
-}
-
-.plan-details {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.plan-detail-item {
-    padding: 1.5rem;
-    background: var(--payvilus-light);
-    border-radius: 8px;
-}
-
-.plan-detail-label {
-    font-size: 0.85rem;
-    color: #999;
-    text-transform: uppercase;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.plan-detail-value {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--payvilus-dark);
-}
-
-.plan-features-list {
-    list-style: none;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid #eee;
-}
-
-.plan-features-list li {
-    padding: 0.75rem 0;
-    color: var(--payvilus-dark);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.plan-features-list li::before {
-    content: '✓';
-    color: var(--payvilus-primary);
-    font-weight: 700;
-    font-size: 1.2rem;
-}
-
-/* ===== PLAN CARDS ===== */
 .plans-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
-    margin-bottom: 3rem;
+    align-items: stretch;
 }
 
-.plan-card {
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    position: relative;
+@media (min-width: 960px) {
+    .plans-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
-.plan-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-.plan-card.current {
-    border: 2px solid var(--payvilus-primary);
-    box-shadow: 0 0 20px rgba(22, 249, 138, 0.2);
-}
-
-.plan-card-header {
-    padding: 2rem;
-    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
-    color: var(--payvilus-dark);
-    text-align: center;
-}
-
-.plan-card-header h3 {
-    margin: 0;
-    font-size: 1.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-}
-
-.plan-card-header .icon {
-    font-size: 2rem;
-}
-
-.plan-card-body {
-    padding: 2rem;
+/* ===== TYPOGRAPHIE ===== */
+.plan-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
 .plan-price {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #eee;
-}
-
-.plan-price-amount {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 700;
-    color: var(--payvilus-dark);
+    line-height: 1;
 }
 
 .plan-price-currency {
-    font-size: 0.9rem;
-    color: #666;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
 }
 
-.plan-price-period {
+.plan-period {
     font-size: 0.9rem;
-    color: #999;
+    opacity: 0.7;
     margin-top: 0.5rem;
 }
 
-.plan-features {
-    list-style: none;
-    margin-bottom: 2rem;
-}
-
-.plan-features li {
-    padding: 0.75rem 0;
-    color: #333;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
+.plan-description {
     font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.8;
+    margin: 1rem 0 2rem;
 }
 
-.plan-features li::before {
-    content: '✓';
-    color: var(--payvilus-primary);
-    font-weight: 700;
-    font-size: 1.2rem;
-    flex-shrink: 0;
+/* ===== DIVIDERS ===== */
+.feature-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 1.5rem 0;
 }
 
-.plan-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+/* ===== HOVER EFFECTS ===== */
+.interactive-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.btn-subscribe {
-    padding: 1rem;
-    border: none;
+.interactive-card:hover {
+    transform: translateY(-8px);
+}
+
+/* ===== LOADING STATES ===== */
+.skeleton {
+    background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0.05) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
     border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-    font-size: 0.95rem;
 }
 
-.btn-subscribe-primary {
-    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
-    color: var(--payvilus-dark);
-}
-
-.btn-subscribe-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(22, 249, 138, 0.3);
-}
-
-.btn-subscribe-secondary {
-    background: transparent;
-    color: var(--payvilus-dark);
-    border: 2px solid var(--payvilus-dark);
-}
-
-.btn-subscribe-secondary:hover {
-    background: var(--payvilus-light);
-}
-
-.btn-subscribe-cancel {
-    background: #ff6b6b;
-    color: white;
-}
-
-.btn-subscribe-cancel:hover {
-    background: #ee5a52;
-}
-
-.btn-subscribe:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.plan-current-badge {
+/* ===== ACCESSIBILITY ===== */
+.sr-only {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: var(--payvilus-primary);
-    color: var(--payvilus-dark);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 700;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .current-plan-header {
-        flex-direction: column;
-        text-align: center;
+/* ===== PRINT ===== */
+@media print {
+    .pricing-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
     }
 
-    .current-plan-info h2 {
-        font-size: 1.5rem;
-    }
-
-    .plan-details {
-        grid-template-columns: 1fr;
-    }
-
-    .plans-grid {
-        grid-template-columns: 1fr;
+    .cta-button {
+        display: none;
     }
 }
