@@ -1,23 +1,28 @@
-// src/pages/Subscription.jsx - NOUVEAU DESIGN MODERNE
+// src/pages/Subscription.jsx - AVEC STRIPE PAYMENT INTENT
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Box, Container, Grid, Button, Typography, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Box, Container, Grid, Button, Typography, List, ListItem, ListItemIcon, ListItemText, Alert } from '@mui/material'
 import CheckIcon from '@mui/icons-material/Check'
 import StarIcon from '@mui/icons-material/Star'
 import VerifiedIcon from '@mui/icons-material/Verified'
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium'
 import Navbar from '../components/Navbar'
+import PaymentModal from '../components/PaymentModal'
 import { useAuth } from '../context/AuthContext'
 import { useSubscription } from '../hooks/useSubscription'
 import { supabase } from '../config/supabaseClient'
+import toast, { Toaster } from 'react-hot-toast'
 import '../styles/Membership.css'
 
 export default function Subscription() {
     const { user } = useAuth()
     const navigate = useNavigate()
-    const { subscription, plan: currentPlan, loading } = useSubscription(user?.id)
+    const [searchParams] = useSearchParams()
+    const { subscription, plan: currentPlan, loading, refetch } = useSubscription(user?.id)
     const [allPlans, setAllPlans] = useState([])
     const [loadingPlans, setLoadingPlans] = useState(true)
+    const [paymentModalOpen, setPaymentModalOpen] = useState(false)
+    const [selectedPlan, setSelectedPlan] = useState(null)
 
     const planConfig = {
         'free': {
@@ -50,6 +55,18 @@ export default function Subscription() {
         fetchAllPlans()
     }, [])
 
+    useEffect(() => {
+        // Vérifier si paiement réussi (retour de Stripe)
+        const paymentStatus = searchParams.get('payment')
+        if (paymentStatus === 'success') {
+            toast.success('Paiement réussi ! Votre abonnement a été activé.')
+            // Nettoyer l'URL
+            window.history.replaceState({}, '', '/subscription')
+            // Recharger les données
+            refetch()
+        }
+    }, [searchParams])
+
     const fetchAllPlans = async () => {
         try {
             const { data, error } = await supabase
@@ -66,12 +83,35 @@ export default function Subscription() {
         }
     }
 
-    const handleSubscribe = async (planSlug) => {
-        if (planSlug === currentPlan?.slug) {
-            alert('Vous êtes déjà abonné à ce plan')
+    const handleSubscribe = async (plan) => {
+        // Si plan gratuit
+        if (plan.slug === 'free') {
+            toast.error('Vous êtes déjà sur le plan gratuit')
             return
         }
-        alert(`Fonctionnalité d'abonnement ${planSlug} à venir avec Stripe`)
+
+        // Si déjà abonné à ce plan
+        if (plan.slug === currentPlan?.slug) {
+            toast.error('Vous êtes déjà abonné à ce plan')
+            return
+        }
+
+        // Ouvrir le modal de paiement
+        setSelectedPlan(plan)
+        setPaymentModalOpen(true)
+    }
+
+    const handlePaymentModalClose = (success) => {
+        setPaymentModalOpen(false)
+        setSelectedPlan(null)
+
+        if (success) {
+            toast.success('Abonnement activé avec succès !')
+            // Recharger les données
+            setTimeout(() => {
+                refetch()
+            }, 1500)
+        }
     }
 
     if (loading || loadingPlans) {
@@ -101,6 +141,7 @@ export default function Subscription() {
             position: 'relative',
             overflow: 'hidden'
         }}>
+            <Toaster position="top-right" />
             <Navbar />
 
             <Container maxWidth="lg" sx={{ py: 8, position: 'relative', zIndex: 1 }}>
@@ -127,7 +168,7 @@ export default function Subscription() {
                     spacing={3}
                     sx={{
                         justifyContent: 'center',
-                        flexWrap: { xs: 'wrap', md: 'nowrap' }, // Pas de wrap sur desktop
+                        flexWrap: { xs: 'wrap', md: 'nowrap' },
                         alignItems: 'stretch'
                     }}
                 >
@@ -145,8 +186,8 @@ export default function Subscription() {
                                 key={plan.id}
                                 sx={{
                                     display: 'flex',
-                                    minWidth: { md: 0 }, // Force Grid à respecter les colonnes
-                                    flex: { md: '1 1 0' } // Toutes les colonnes ont la même taille
+                                    minWidth: { md: 0 },
+                                    flex: { md: '1 1 0' }
                                 }}
                             >
                                 <Box
@@ -183,14 +224,6 @@ export default function Subscription() {
                                                 backgroundPosition: '0% 50%'
                                             }
                                         },
-                                        '@keyframes pulse-glow': {
-                                            '0%, 100%': {
-                                                boxShadow: '0 20px 60px rgba(22, 249, 138, 0.6), 0 0 0 3px rgba(22, 249, 138, 0.3)'
-                                            },
-                                            '50%': {
-                                                boxShadow: '0 25px 70px rgba(22, 249, 138, 0.8), 0 0 0 5px rgba(22, 249, 138, 0.5)'
-                                            }
-                                        },
                                         '&:hover': {
                                             transform: 'scale(1.03)',
                                             boxShadow: isHighlight
@@ -221,7 +254,7 @@ export default function Subscription() {
                                         </Box>
                                     )}
 
-                                    {/* Badge "Recommandé" pour Premium */}
+                                    {/* Badge "Recommandé" */}
                                     {isHighlight && !isCurrent && (
                                         <Box
                                             sx={{
@@ -308,135 +341,41 @@ export default function Subscription() {
                                         {config.description}
                                     </Typography>
 
-                                    {/* Bouton CTA avec effet Sparkle */}
-                                    <Box sx={{ position: 'relative', mb: 3 }}>
-                                        <Button
-                                            fullWidth
-                                            variant={isCurrent ? 'outlined' : 'contained'}
-                                            disabled={isCurrent}
-                                            onClick={() => handleSubscribe(plan.slug)}
-                                            className="sparkle-button"
-                                            sx={{
-                                                py: 1.5,
-                                                fontWeight: 700,
-                                                fontSize: '1rem',
-                                                borderRadius: 2,
-                                                textTransform: 'none',
-                                                position: 'relative',
-                                                overflow: 'hidden',
+                                    {/* Bouton CTA */}
+                                    <Button
+                                        fullWidth
+                                        variant={isCurrent ? 'outlined' : 'contained'}
+                                        disabled={isCurrent}
+                                        onClick={() => handleSubscribe(plan)}
+                                        sx={{
+                                            py: 1.5,
+                                            mb: 3,
+                                            fontWeight: 700,
+                                            fontSize: '1rem',
+                                            borderRadius: 2,
+                                            textTransform: 'none',
+                                            background: isCurrent
+                                                ? 'transparent'
+                                                : (isHighlight ? '#fff' : 'transparent'),
+                                            color: isCurrent
+                                                ? '#666'
+                                                : (isHighlight ? '#16f98a' : '#F8F8F8'),
+                                            border: isCurrent
+                                                ? '2px solid #666'
+                                                : (isHighlight ? 'none' : '2px solid #424242'),
+                                            '&:hover': {
                                                 background: isCurrent
                                                     ? 'transparent'
-                                                    : (isHighlight ? '#fff' : 'transparent'),
-                                                color: isCurrent
-                                                    ? '#666'
-                                                    : (isHighlight ? '#16f98a' : '#F8F8F8'),
+                                                    : (isHighlight ? '#f0f0f0' : 'rgba(22, 249, 138, 0.1)'),
                                                 border: isCurrent
                                                     ? '2px solid #666'
-                                                    : (isHighlight ? 'none' : '2px solid #424242'),
-                                                '&:hover': {
-                                                    background: isCurrent
-                                                        ? 'transparent'
-                                                        : (isHighlight ? '#f0f0f0' : 'rgba(22, 249, 138, 0.1)'),
-                                                    border: isCurrent
-                                                        ? '2px solid #666'
-                                                        : (isHighlight ? 'none' : '2px solid #16f98a'),
-                                                    transform: 'translateY(-2px)',
-                                                    boxShadow: isHighlight
-                                                        ? '0 8px 25px rgba(22, 249, 138, 0.3)'
-                                                        : '0 8px 25px rgba(22, 249, 138, 0.2)'
-                                                },
-                                                '&:disabled': {
-                                                    background: 'transparent',
-                                                    border: '2px solid #666',
-                                                    color: '#666'
-                                                },
-                                                '&::before': {
-                                                    content: '""',
-                                                    position: 'absolute',
-                                                    top: '-50%',
-                                                    left: '-50%',
-                                                    width: '200%',
-                                                    height: '200%',
-                                                    background: 'radial-gradient(circle, rgba(22, 249, 138, 0.3) 0%, transparent 70%)',
-                                                    opacity: 0,
-                                                    transition: 'opacity 0.3s ease',
-                                                    pointerEvents: 'none'
-                                                },
-                                                '&:hover::before': {
-                                                    opacity: !isCurrent ? 1 : 0
-                                                }
-                                            }}
-                                        >
-                                            <span style={{ position: 'relative', zIndex: 1 }}>
-                                                {isCurrent ? 'Plan actuel' : config.ctaText}
-                                            </span>
-
-                                            {/* Étoiles Sparkle */}
-                                            {!isCurrent && (
-                                                <Box
-                                                    className="stars"
-                                                    sx={{
-                                                        position: 'absolute',
-                                                        inset: 0,
-                                                        pointerEvents: 'none',
-                                                        opacity: 0,
-                                                        transition: 'opacity 0.3s ease',
-                                                        '.sparkle-button:hover &': {
-                                                            opacity: 1
-                                                        }
-                                                    }}
-                                                >
-                                                    {[...Array(6)].map((_, i) => (
-                                                        <Box
-                                                            key={i}
-                                                            sx={{
-                                                                position: 'absolute',
-                                                                width: '4px',
-                                                                height: '4px',
-                                                                borderRadius: '50%',
-                                                                background: '#16f98a',
-                                                                boxShadow: '0 0 10px #16f98a',
-                                                                animation: `sparkle-${i % 3} 1s ease-in-out infinite`,
-                                                                top: `${Math.random() * 100}%`,
-                                                                left: `${Math.random() * 100}%`,
-                                                                '@keyframes sparkle-0': {
-                                                                    '0%, 100%': {
-                                                                        transform: 'scale(0) translateY(0)',
-                                                                        opacity: 0
-                                                                    },
-                                                                    '50%': {
-                                                                        transform: 'scale(1.5) translateY(-20px)',
-                                                                        opacity: 1
-                                                                    }
-                                                                },
-                                                                '@keyframes sparkle-1': {
-                                                                    '0%, 100%': {
-                                                                        transform: 'scale(0) translateX(0)',
-                                                                        opacity: 0
-                                                                    },
-                                                                    '50%': {
-                                                                        transform: 'scale(1.2) translateX(15px)',
-                                                                        opacity: 1
-                                                                    }
-                                                                },
-                                                                '@keyframes sparkle-2': {
-                                                                    '0%, 100%': {
-                                                                        transform: 'scale(0) translate(0, 0)',
-                                                                        opacity: 0
-                                                                    },
-                                                                    '50%': {
-                                                                        transform: 'scale(1) translate(-15px, 15px)',
-                                                                        opacity: 1
-                                                                    }
-                                                                },
-                                                                animationDelay: `${i * 0.15}s`
-                                                            }}
-                                                        />
-                                                    ))}
-                                                </Box>
-                                            )}
-                                        </Button>
-                                    </Box>
+                                                    : (isHighlight ? 'none' : '2px solid #16f98a'),
+                                                transform: 'translateY(-2px)'
+                                            }
+                                        }}
+                                    >
+                                        {isCurrent ? 'Plan actuel' : config.ctaText}
+                                    </Button>
 
                                     {/* "Billed monthly" */}
                                     {plan.monthly_price && (
@@ -465,7 +404,7 @@ export default function Subscription() {
                                         {plan.name} comprend :
                                     </Typography>
 
-                                    {/* Features principales */}
+                                    {/* Features */}
                                     <List dense sx={{ mb: 2 }}>
                                         <ListItem disablePadding sx={{ mb: 1 }}>
                                             <ListItemIcon sx={{ minWidth: 32 }}>
@@ -521,7 +460,6 @@ export default function Subscription() {
                                             />
                                         </ListItem>
 
-                                        {/* Features additionnelles */}
                                         {plan.features?.map((feature, idx) => (
                                             <ListItem key={idx} disablePadding sx={{ mb: 1 }}>
                                                 <ListItemIcon sx={{ minWidth: 32 }}>
@@ -558,6 +496,16 @@ export default function Subscription() {
                     </Typography>
                 </Box>
             </Container>
+
+            {/* Modal de paiement Stripe */}
+            {selectedPlan && (
+                <PaymentModal
+                    isOpen={paymentModalOpen}
+                    onClose={handlePaymentModalClose}
+                    plan={selectedPlan}
+                    user={user}
+                />
+            )}
         </Box>
     )
 }
