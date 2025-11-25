@@ -1,4 +1,4 @@
-// src/pages/Paypal.jsx - PAGE PAYPAL COMPLÈTE
+// src/pages/Paypal.jsx - CORRECTION DU BUG commission_rate: 0
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -248,9 +248,10 @@ export default function Paypal() {
                         </Typography>
 
                         <Typography variant="body2" paragraph>
-                            • Commission : {plan?.commission_rate || 15}%<br />
-                            • Temps de traitement : {plan?.processing_time_min || 20}-{plan?.processing_time_max || 120} minutes<br />
-                            • Réduction formations : {plan?.course_discount || 0}%
+                            {/* ✅ CORRECTION ICI : || remplacé par ?? */}
+                            • Commission : {plan?.commission_rate ?? 15}%<br />
+                            • Temps de traitement : {plan?.processing_time_min ?? 20}-{plan?.processing_time_max ?? 120} minutes<br />
+                            • Réduction formations : {plan?.course_discount ?? 0}%
                         </Typography>
 
                         <Alert severity="success" sx={{ mb: 2 }}>

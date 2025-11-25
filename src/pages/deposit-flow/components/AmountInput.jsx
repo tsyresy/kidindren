@@ -1,4 +1,4 @@
-// src/pages/deposit-flow/components/AmountInput.jsx
+// src/pages/deposit-flow/components/AmountInput.jsx - CORRECTION DU BUG
 import { Box, TextField, MenuItem, Typography } from '@mui/material'
 
 export default function AmountInput({ amount, setAmount, currency, setCurrency, mgaAmount, plan, error }) {
@@ -66,7 +66,8 @@ export default function AmountInput({ amount, setAmount, currency, setCurrency, 
                         </Typography>
                     </Box>
                     <Typography variant="caption" sx={{ display: 'block', mt: 1, color: 'text.secondary' }}>
-                        Inclut commission de {plan?.commission_rate || 15}% • Plan {plan?.name || 'Free'}
+                        {/* ✅ CORRECTION ICI : || remplacé par ?? */}
+                        Inclut commission de {plan?.commission_rate ?? 15}% • Plan {plan?.name || 'Free'}
                     </Typography>
                 </Box>
             )}

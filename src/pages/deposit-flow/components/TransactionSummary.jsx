@@ -1,4 +1,4 @@
-// src/pages/deposit-flow/components/TransactionSummary.jsx
+// src/pages/deposit-flow/components/TransactionSummary.jsx - CORRECTION DU BUG
 import { Box, Typography, Divider, Alert } from '@mui/material'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -8,7 +8,8 @@ export default function TransactionSummary({ amount, currency, mgaAmount, plan, 
 
     const rate = currency === 'EUR' ? 5450 : 4700
     const baseAmount = parseFloat(amount) * rate
-    const serviceFee = baseAmount * (plan?.commission_rate || 15) / 100
+    // ✅ CORRECTION ICI : || remplacé par ??
+    const serviceFee = baseAmount * (plan?.commission_rate ?? 15) / 100
 
     return (
         <Box sx={{
@@ -69,7 +70,8 @@ export default function TransactionSummary({ amount, currency, mgaAmount, plan, 
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1, borderBottom: '1px solid #e0e0e0' }}>
                     <Typography variant="body2" color="text.secondary">
-                        Frais ({plan?.commission_rate || 15}%)
+                        {/* ✅ CORRECTION ICI : || remplacé par ?? */}
+                        Frais ({plan?.commission_rate ?? 15}%)
                     </Typography>
                     <Typography variant="body2" sx={{ fontWeight: 600 }}>
                         +{serviceFee.toLocaleString('fr-FR')} MGA
@@ -124,7 +126,8 @@ export default function TransactionSummary({ amount, currency, mgaAmount, plan, 
                     Temps de traitement
                 </Typography>
                 <Typography variant="caption">
-                    Votre PayPal sera crédité dans {plan?.processing_time_min || 20}-{plan?.processing_time_max || 120} minutes après vérification.
+                    {/* ✅ CORRECTION ICI : || remplacé par ?? */}
+                    Votre PayPal sera crédité dans {plan?.processing_time_min ?? 20}-{plan?.processing_time_max ?? 120} minutes après vérification.
                 </Typography>
             </Alert>
         </Box>

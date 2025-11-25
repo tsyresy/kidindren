@@ -1,4 +1,4 @@
-// src/pages/withdrawal-flow/components/WithdrawalForm.jsx
+// src/pages/withdrawal-flow/components/WithdrawalForm.jsx - CORRECTION DU BUG
 import { useState, useEffect } from 'react'
 import { Box, TextField, MenuItem, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, Alert, Checkbox, FormControlLabel } from '@mui/material'
 import ReCAPTCHA from 'react-google-recaptcha'
@@ -40,7 +40,8 @@ export default function WithdrawalForm({ onSubmit, plan }) {
             if (!isNaN(amount) && amount > 0) {
                 const rate = formData.currency === 'EUR' ? 4800 : 4500
                 const baseAmount = amount * rate
-                const commissionRate = plan.commission_rate / 100
+                // ✅ CORRECTION ICI : || remplacé par ??
+                const commissionRate = (plan.commission_rate ?? 15) / 100
                 const finalAmount = baseAmount * (1 - commissionRate)
                 setCalculatedMGA(Math.round(finalAmount))
             } else {
@@ -158,7 +159,8 @@ export default function WithdrawalForm({ onSubmit, plan }) {
                                     {calculatedMGA.toLocaleString('fr-FR')} MGA
                                 </Typography>
                                 <Typography variant="caption" color="text.secondary">
-                                    Après déduction de {plan?.commission_rate || 15}% • Taux: {formData.currency === 'EUR' ? '4 800' : '4 500'} MGA/{formData.currency}
+                                    {/* ✅ CORRECTION ICI : || remplacé par ?? */}
+                                    Après déduction de {plan?.commission_rate ?? 15}% • Taux: {formData.currency === 'EUR' ? '4 800' : '4 500'} MGA/{formData.currency}
                                 </Typography>
                             </Box>
                         )}
@@ -294,7 +296,8 @@ export default function WithdrawalForm({ onSubmit, plan }) {
                         <strong>2. Traitement:</strong> Les transactions prennent 1-24 heures pour vérification manuelle.
                     </Typography>
                     <Typography variant="body2" paragraph>
-                        <strong>3. Frais:</strong> Des frais de {plan?.commission_rate || 15}% s'appliquent selon votre plan.
+                        {/* ✅ CORRECTION ICI : || remplacé par ?? */}
+                        <strong>3. Frais:</strong> Des frais de {plan?.commission_rate ?? 15}% s'appliquent selon votre plan.
                     </Typography>
                     <Typography variant="body2" paragraph>
                         <strong>4. Conformité:</strong> Service conforme à la Loi malgache N° 2014-006.

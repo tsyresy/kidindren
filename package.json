@@ -19,6 +19,7 @@
     "@stripe/stripe-js": "^8.5.2",
     "@supabase/supabase-js": "^2.80.0",
     "jspdf": "^3.0.4",
+    "lucide-react": "^0.554.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-google-recaptcha": "^3.1.0",

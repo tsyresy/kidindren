@@ -1,4 +1,4 @@
-// src/pages/withdrawal-flow/components/TransactionSummary.jsx
+// src/pages/withdrawal-flow/components/TransactionSummary.jsx - CORRECTION DU BUG
 import { Box, Typography, Alert } from '@mui/material'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -120,7 +120,8 @@ export default function TransactionSummary({ formData, calculatedMGA, plan }) {
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                             <Typography variant="body2" color="text.secondary">
-                                Frais ({plan?.commission_rate || 15}%) :
+                                {/* ✅ CORRECTION ICI : || remplacé par ?? */}
+                                Frais ({plan?.commission_rate ?? 15}%) :
                             </Typography>
                             <Typography variant="body2">
                                 -{serviceFee.toLocaleString('fr-FR')} MGA

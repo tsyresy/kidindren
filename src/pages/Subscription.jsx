@@ -1,4 +1,4 @@
-// src/pages/Subscription.jsx - AVEC STRIPE PAYMENT INTENT
+// src/pages/Subscription.jsx - AVEC STRIPE PAYMENT INTENT + DOWNGRADE VERS FREE
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Box, Container, Grid, Button, Typography, List, ListItem, ListItemIcon, ListItemText, Alert } from '@mui/material'
@@ -23,6 +23,7 @@ export default function Subscription() {
     const [loadingPlans, setLoadingPlans] = useState(true)
     const [paymentModalOpen, setPaymentModalOpen] = useState(false)
     const [selectedPlan, setSelectedPlan] = useState(null)
+    const [downgradingToFree, setDowngradingToFree] = useState(false)
 
     const planConfig = {
         'free': {
@@ -30,7 +31,7 @@ export default function Subscription() {
             color: '#424242',
             highlight: false,
             description: 'Outils de base pour découvrir PayPal et le digital.',
-            ctaText: 'Plan actuel',
+            ctaText: 'Revenir au plan gratuit',
             ctaVariant: 'outlined'
         },
         'standard': {
@@ -62,10 +63,12 @@ export default function Subscription() {
             toast.success('Paiement réussi ! Votre abonnement a été activé.')
             // Nettoyer l'URL
             window.history.replaceState({}, '', '/subscription')
-            // Recharger les données
-            refetch()
+            // Recharger les données après un délai
+            setTimeout(() => {
+                refetch()
+            }, 2000)
         }
-    }, [searchParams])
+    }, [searchParams, refetch])
 
     const fetchAllPlans = async () => {
         try {
@@ -83,10 +86,70 @@ export default function Subscription() {
         }
     }
 
+    // Fonction pour revenir au plan Free (sans Stripe)
+    const handleDowngradeToFree = async (freePlan) => {
+        if (!user?.id) {
+            toast.error('Vous devez être connecté')
+            return
+        }
+
+        // Demander confirmation
+        const confirmed = window.confirm(
+            'Êtes-vous sûr de vouloir passer au plan Free ? Vous perdrez les avantages de votre plan actuel.'
+        )
+
+        if (!confirmed) return
+
+        setDowngradingToFree(true)
+
+        try {
+            // Mettre à jour l'abonnement vers Free
+            const { error } = await supabase
+                .from('user_subscriptions')
+                .upsert({
+                    user_id: user.id,
+                    plan_id: freePlan.id,
+                    status: 'active',
+                    stripe_subscription_id: null,
+                    current_period_start: new Date().toISOString().split('T')[0],
+                    current_period_end: null,
+                    cancel_at_period_end: false,
+                    updated_at: new Date().toISOString()
+                }, {
+                    onConflict: 'user_id'
+                })
+
+            if (error) {
+                console.error('Erreur downgrade:', error)
+                toast.error('Erreur lors du changement de plan')
+            } else {
+                toast.success('Vous êtes maintenant sur le plan Free', {
+                    icon: '✅',
+                    duration: 4000,
+                })
+                // Recharger les données
+                setTimeout(() => {
+                    refetch()
+                }, 1000)
+            }
+        } catch (error) {
+            console.error('Erreur:', error)
+            toast.error('Une erreur est survenue')
+        } finally {
+            setDowngradingToFree(false)
+        }
+    }
+
     const handleSubscribe = async (plan) => {
-        // Si plan gratuit
+        // Si plan gratuit, downgrade direct
         if (plan.slug === 'free') {
-            toast.error('Vous êtes déjà sur le plan gratuit')
+            // Si déjà sur Free
+            if (currentPlan?.slug === 'free') {
+                toast.error('Vous êtes déjà sur le plan gratuit')
+                return
+            }
+            // Sinon, downgrade
+            handleDowngradeToFree(plan)
             return
         }
 
@@ -96,21 +159,24 @@ export default function Subscription() {
             return
         }
 
-        // Ouvrir le modal de paiement
+        // Ouvrir le modal de paiement pour les plans payants
         setSelectedPlan(plan)
         setPaymentModalOpen(true)
     }
 
-    const handlePaymentModalClose = (success) => {
+    const handlePaymentModalClose = async (success) => {
         setPaymentModalOpen(false)
         setSelectedPlan(null)
 
         if (success) {
-            toast.success('Abonnement activé avec succès !')
+            toast.success('Abonnement activé avec succès !', {
+                icon: '🎉',
+                duration: 5000,
+            })
+            // Attendre que le webhook traite le paiement
+            await new Promise(resolve => setTimeout(resolve, 2000))
             // Recharger les données
-            setTimeout(() => {
-                refetch()
-            }, 1500)
+            refetch()
         }
     }
 
@@ -345,7 +411,7 @@ export default function Subscription() {
                                     <Button
                                         fullWidth
                                         variant={isCurrent ? 'outlined' : 'contained'}
-                                        disabled={isCurrent}
+                                        disabled={isCurrent || downgradingToFree}
                                         onClick={() => handleSubscribe(plan)}
                                         sx={{
                                             py: 1.5,
@@ -371,10 +437,18 @@ export default function Subscription() {
                                                     ? '2px solid #666'
                                                     : (isHighlight ? 'none' : '2px solid #16f98a'),
                                                 transform: 'translateY(-2px)'
+                                            },
+                                            '&:disabled': {
+                                                opacity: 0.6
                                             }
                                         }}
                                     >
-                                        {isCurrent ? 'Plan actuel' : config.ctaText}
+                                        {downgradingToFree && plan.slug === 'free'
+                                            ? 'Changement en cours...'
+                                            : isCurrent
+                                                ? 'Plan actuel'
+                                                : config.ctaText
+                                        }
                                     </Button>
 
                                     {/* "Billed monthly" */}
