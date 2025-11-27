@@ -21,6 +21,15 @@ import About from './pages/About'
 import DepositFlow from './pages/deposit-flow'
 import WithdrawalFlow from './pages/withdrawal-flow'
 
+// ========================================
+// IMPORTS ADMIN - NOUVEAUX
+// ========================================
+import AdminLayout from './components/AdminLayout'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminTransactions from './pages/admin/AdminTransactions'
+import AdminCourses from './pages/admin/AdminCourses'
+// ========================================
+
 function App() {
     return (
         <Router>
@@ -100,6 +109,23 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
+
+                    {/* ========================================
+                        ROUTES ADMIN - NOUVELLES
+                        ======================================== */}
+                    <Route
+                        path="/admin"
+                        element={
+                            <ProtectedRoute requireAdmin={true}>
+                                <AdminLayout />
+                            </ProtectedRoute>
+                        }
+                    >
+                        <Route index element={<AdminDashboard />} />
+                        <Route path="transactions" element={<AdminTransactions />} />
+                        <Route path="courses" element={<AdminCourses />} />
+                    </Route>
+                    {/* ======================================== */}
 
                     {/* Redirection pour les routes invalides */}
                     <Route path="*" element={<Navigate to="/" replace />} />

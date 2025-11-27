@@ -1,14 +1,18 @@
 // src/components/Navbar.jsx
-import { Link, useLocation } from 'react-router-dom'
-import { Box, Button, AppBar, Toolbar, Container, Stack } from '@mui/material'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Box, Button, AppBar, Toolbar, Container, Stack, IconButton, Tooltip } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout'
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import { useAuth } from '../context/AuthContext'
+import { useAdmin } from '../hooks/useAdmin'
 import MembershipBadge from './MembershipBadge'
 import '../styles/Components.css'
 
 export default function Navbar() {
     const { user, signOut } = useAuth()
+    const { isAdmin } = useAdmin(user?.id)
     const location = useLocation()
+    const navigate = useNavigate()
 
     const handleLogout = async () => {
         await signOut()
@@ -110,6 +114,29 @@ export default function Navbar() {
                     <Stack direction="row" spacing={1.5} alignItems="center">
                         {/* Badge Membership */}
                         <MembershipBadge />
+
+                        {/* ========================================
+                            NOUVELLE ICÔNE ADMIN - UNIQUEMENT VISIBLE POUR LES ADMINS
+                            ======================================== */}
+                        {isAdmin && (
+                            <Tooltip title="Panel Admin" arrow>
+                                <IconButton
+                                    onClick={() => navigate('/admin')}
+                                    sx={{
+                                        color: isActive('/admin') || location.pathname.startsWith('/admin') ? '#FFD700' : '#16f98a',
+                                        bgcolor: isActive('/admin') || location.pathname.startsWith('/admin') ? 'rgba(255, 215, 0, 0.1)' : 'transparent',
+                                        '&:hover': {
+                                            bgcolor: 'rgba(22, 249, 138, 0.1)',
+                                            transform: 'scale(1.1)'
+                                        },
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                >
+                                    <AdminPanelSettingsIcon sx={{ fontSize: 28 }} />
+                                </IconButton>
+                            </Tooltip>
+                        )}
+                        {/* ======================================== */}
 
                         {/* Avatar et Nom */}
                         <Box
