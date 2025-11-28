@@ -1,4 +1,4 @@
-// src/pages/admin/AdminTransactions.jsx - Gestion des transactions PayPal
+// src/pages/admin/AdminTransactions.jsx
 import { useState, useEffect } from 'react'
 import {
     Box,
@@ -12,7 +12,6 @@ import {
     TableRow,
     Chip,
     Button,
-    IconButton,
     TextField,
     Select,
     MenuItem,
@@ -51,23 +50,17 @@ export default function AdminTransactions() {
             setLoading(true)
 
             const { data, error } = await supabase
-                .from('paypal_transactions')
-                .select(`
-                    *,
-                    profiles!paypal_transactions_user_id_fkey (
-                        full_name,
-                        email
-                    )
-                `)
+                .from('transactions')
+                .select('*')
                 .order('created_at', { ascending: false })
 
             if (error) throw error
 
-            console.log('📊 Transactions chargées:', data)
+            console.log('Transactions chargées:', data?.length || 0)
             setTransactions(data || [])
         } catch (error) {
             console.error('Erreur chargement transactions:', error)
-            toast.error('Erreur lors du chargement des transactions')
+            toast.error('Erreur lors du chargement')
         } finally {
             setLoading(false)
         }
@@ -76,33 +69,31 @@ export default function AdminTransactions() {
     const handleUpdateStatus = async (transactionId, newStatus) => {
         try {
             const { error } = await supabase
-                .from('paypal_transactions')
+                .from('transactions')
                 .update({ status: newStatus })
                 .eq('id', transactionId)
 
             if (error) throw error
 
-            toast.success(`Statut mis à jour : ${newStatus}`)
+            toast.success('Statut mis à jour')
             fetchTransactions()
             setDialogOpen(false)
             setSelectedTransaction(null)
         } catch (error) {
-            console.error('Erreur mise à jour statut:', error)
+            console.error('Erreur mise à jour:', error)
             toast.error('Erreur lors de la mise à jour')
         }
     }
 
     const getStatusColor = (status) => {
-        switch (status) {
-            case 'Terminé':
-                return 'success'
-            case 'En attente':
-                return 'warning'
-            case 'Non vérifié':
-                return 'error'
-            default:
-                return 'default'
+        const colors = {
+            'completed': 'success',
+            'pending': 'warning',
+            'processing': 'info',
+            'failed': 'error',
+            'cancelled': 'default'
         }
+        return colors[status] || 'default'
     }
 
     const getStatusIcon = (status) => {
@@ -111,22 +102,41 @@ export default function AdminTransactions() {
                 return <CheckCircleIcon sx={{ fontSize: 18 }} />
             case 'En attente':
                 return <PendingIcon sx={{ fontSize: 18 }} />
-            case 'Non vérifié':
+            case 'Échoué':
                 return <CancelIcon sx={{ fontSize: 18 }} />
             default:
                 return null
         }
     }
 
+    const getTypeLabel = (type) => {
+        return type === 'deposit' ? 'Dépôt' : type === 'withdrawal' ? 'Retrait' : type
+    }
+
+    const getStatusLabel = (status) => {
+        const labels = {
+            'pending': 'En attente',
+            'processing': 'En cours',
+            'completed': 'Terminé',
+            'failed': 'Échoué',
+            'cancelled': 'Annulé'
+        }
+        return labels[status] || status
+    }
+
     const filteredTransactions = transactions.filter(tx => {
         const matchStatus = filterStatus === 'all' || tx.status === filterStatus
-        const matchSearch =
-            tx.profiles?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            tx.profiles?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            tx.paypal_email?.toLowerCase().includes(searchTerm.toLowerCase())
+        const matchSearch = !searchTerm || (tx.paypal_email && tx.paypal_email.toLowerCase().includes(searchTerm.toLowerCase()))
 
         return matchStatus && matchSearch
     })
+
+    const stats = {
+        total: transactions.length,
+        pending: transactions.filter(t => t.status === 'pending').length,
+        completed: transactions.filter(t => t.status === 'completed').length,
+        failed: transactions.filter(t => t.status === 'failed').length
+    }
 
     if (loading) {
         return (
@@ -138,7 +148,6 @@ export default function AdminTransactions() {
 
     return (
         <Box>
-            {/* Header */}
             <Box sx={{ mb: 4 }}>
                 <Typography variant="h4" sx={{ color: '#fff', fontWeight: 700, mb: 1 }}>
                     Gestion des Transactions PayPal
@@ -148,11 +157,45 @@ export default function AdminTransactions() {
                 </Typography>
             </Box>
 
-            {/* Filtres et recherche */}
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, mb: 3 }}>
+                <Paper sx={{ p: 3, bgcolor: 'rgba(255, 255, 255, 0.05)' }}>
+                    <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14, mb: 1 }}>
+                        Total
+                    </Typography>
+                    <Typography variant="h4" sx={{ color: '#fff', fontWeight: 700 }}>
+                        {stats.total}
+                    </Typography>
+                </Paper>
+                <Paper sx={{ p: 3, bgcolor: 'rgba(255, 152, 0, 0.1)' }}>
+                    <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14, mb: 1 }}>
+                        En attente
+                    </Typography>
+                    <Typography variant="h4" sx={{ color: '#FFA726', fontWeight: 700 }}>
+                        {stats.pending}
+                    </Typography>
+                </Paper>
+                <Paper sx={{ p: 3, bgcolor: 'rgba(76, 175, 80, 0.1)' }}>
+                    <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14, mb: 1 }}>
+                        Terminé
+                    </Typography>
+                    <Typography variant="h4" sx={{ color: '#4CAF50', fontWeight: 700 }}>
+                        {stats.completed}
+                    </Typography>
+                </Paper>
+                <Paper sx={{ p: 3, bgcolor: 'rgba(239, 83, 80, 0.1)' }}>
+                    <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14, mb: 1 }}>
+                        Échoué
+                    </Typography>
+                    <Typography variant="h4" sx={{ color: '#EF5350', fontWeight: 700 }}>
+                        {stats.failed}
+                    </Typography>
+                </Paper>
+            </Box>
+
             <Paper sx={{ p: 3, mb: 3, bgcolor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)' }}>
                 <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <TextField
-                        placeholder="Rechercher par email ou nom..."
+                        placeholder="Rechercher par email PayPal..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         sx={{
@@ -184,15 +227,14 @@ export default function AdminTransactions() {
                                 }
                             }}
                         >
-                            <MenuItem value="all">Tous les statuts</MenuItem>
-                            <MenuItem value="En attente">En attente</MenuItem>
-                            <MenuItem value="Terminé">Terminé</MenuItem>
-                            <MenuItem value="Non vérifié">Non vérifié</MenuItem>
+                            <MenuItem value="all">Tous</MenuItem>
+                            <MenuItem value="pending">En attente</MenuItem>
+                            <MenuItem value="completed">Terminé</MenuItem>
+                            <MenuItem value="failed">Échoué</MenuItem>
                         </Select>
                     </FormControl>
 
                     <Button
-                        variant="outlined"
                         startIcon={<RefreshIcon />}
                         onClick={fetchTransactions}
                         sx={{
@@ -203,55 +245,27 @@ export default function AdminTransactions() {
                                 bgcolor: 'rgba(22, 249, 138, 0.1)'
                             }
                         }}
+                        variant="outlined"
                     >
                         Actualiser
                     </Button>
                 </Box>
             </Paper>
 
-            {/* Statistiques rapides */}
-            <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
-                {[
-                    { label: 'Total', count: transactions.length, color: '#16f98a' },
-                    { label: 'En attente', count: transactions.filter(t => t.status === 'En attente').length, color: '#FFA726' },
-                    { label: 'Terminé', count: transactions.filter(t => t.status === 'Terminé').length, color: '#66BB6A' },
-                    { label: 'Non vérifié', count: transactions.filter(t => t.status === 'Non vérifié').length, color: '#EF5350' }
-                ].map((stat) => (
-                    <Paper
-                        key={stat.label}
-                        sx={{
-                            p: 2,
-                            flex: 1,
-                            minWidth: 150,
-                            bgcolor: 'rgba(255, 255, 255, 0.05)',
-                            borderLeft: `4px solid ${stat.color}`
-                        }}
-                    >
-                        <Typography variant="h4" sx={{ color: stat.color, fontWeight: 700 }}>
-                            {stat.count}
-                        </Typography>
-                        <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14 }}>
-                            {stat.label}
-                        </Typography>
-                    </Paper>
-                ))}
-            </Box>
-
-            {/* Table des transactions */}
             {filteredTransactions.length === 0 ? (
                 <Alert severity="info" sx={{ bgcolor: 'rgba(33, 150, 243, 0.1)', color: '#fff' }}>
-                    Aucune transaction trouvée
+                    Aucune transaction trouvée ({transactions.length} transaction(s) au total)
                 </Alert>
             ) : (
                 <TableContainer component={Paper} sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)' }}>
                     <Table>
                         <TableHead>
-                            <TableRow sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)' }}>
+                            <TableRow>
                                 <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Date</TableCell>
-                                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Utilisateur</TableCell>
                                 <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Type</TableCell>
                                 <TableCell sx={{ color: '#fff', fontWeight: 700 }}>PayPal Email</TableCell>
                                 <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Montant</TableCell>
+                                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Opérateur</TableCell>
                                 <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Statut</TableCell>
                                 <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Actions</TableCell>
                             </TableRow>
@@ -260,9 +274,7 @@ export default function AdminTransactions() {
                             {filteredTransactions.map((tx) => (
                                 <TableRow
                                     key={tx.id}
-                                    sx={{
-                                        '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.02)' }
-                                    }}
+                                    sx={{ '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.02)' } }}
                                 >
                                     <TableCell sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                                         {new Date(tx.created_at).toLocaleDateString('fr-FR', {
@@ -274,36 +286,29 @@ export default function AdminTransactions() {
                                         })}
                                     </TableCell>
                                     <TableCell>
-                                        <Box>
-                                            <Typography sx={{ color: '#fff', fontSize: 14, fontWeight: 500 }}>
-                                                {tx.profiles?.full_name || 'N/A'}
-                                            </Typography>
-                                            <Typography sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: 12 }}>
-                                                {tx.profiles?.email}
-                                            </Typography>
-                                        </Box>
-                                    </TableCell>
-                                    <TableCell>
                                         <Chip
-                                            label={tx.transaction_type}
+                                            label={getTypeLabel(tx.transaction_type)}
                                             size="small"
                                             sx={{
-                                                bgcolor: tx.transaction_type === 'Dépôt' ? 'rgba(76, 175, 80, 0.2)' : 'rgba(244, 67, 54, 0.2)',
-                                                color: tx.transaction_type === 'Dépôt' ? '#4CAF50' : '#F44336',
+                                                bgcolor: tx.transaction_type === 'deposit' ? 'rgba(76, 175, 80, 0.2)' : 'rgba(244, 67, 54, 0.2)',
+                                                color: tx.transaction_type === 'deposit' ? '#4CAF50' : '#F44336',
                                                 fontWeight: 600
                                             }}
                                         />
                                     </TableCell>
                                     <TableCell sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                                        {tx.paypal_email}
+                                        {tx.paypal_email || 'N/A'}
                                     </TableCell>
                                     <TableCell sx={{ color: '#16f98a', fontWeight: 600 }}>
-                                        {tx.amount_mga?.toLocaleString()} MGA
+                                        {tx.original_amount?.toLocaleString()} {tx.currency || 'EUR'}
+                                    </TableCell>
+                                    <TableCell sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                        {tx.mobile_money_operator || 'N/A'}
                                     </TableCell>
                                     <TableCell>
                                         <Chip
-                                            icon={getStatusIcon(tx.status)}
-                                            label={tx.status}
+                                            icon={getStatusIcon(getStatusLabel(tx.status))}
+                                            label={getStatusLabel(tx.status)}
                                             color={getStatusColor(tx.status)}
                                             size="small"
                                             sx={{ fontWeight: 600 }}
@@ -336,7 +341,6 @@ export default function AdminTransactions() {
                 </TableContainer>
             )}
 
-            {/* Dialog de modification de statut */}
             <Dialog
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}
@@ -355,14 +359,14 @@ export default function AdminTransactions() {
                     {selectedTransaction && (
                         <Box sx={{ pt: 2 }}>
                             <Typography sx={{ mb: 2, color: 'rgba(255, 255, 255, 0.7)' }}>
-                                Transaction de {selectedTransaction.profiles?.full_name}
+                                Email PayPal: {selectedTransaction.paypal_email || 'N/A'}
                             </Typography>
                             <Typography sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.5)', fontSize: 14 }}>
-                                Montant: {selectedTransaction.amount_mga?.toLocaleString()} MGA
+                                Montant: {selectedTransaction.original_amount?.toLocaleString()} {selectedTransaction.currency || 'EUR'}
                                 <br />
-                                Type: {selectedTransaction.transaction_type}
+                                Type: {getTypeLabel(selectedTransaction.transaction_type)}
                                 <br />
-                                Statut actuel: <strong>{selectedTransaction.status}</strong>
+                                Statut actuel: <strong>{getStatusLabel(selectedTransaction.status)}</strong>
                             </Typography>
 
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -370,8 +374,8 @@ export default function AdminTransactions() {
                                     variant="contained"
                                     fullWidth
                                     startIcon={<CheckCircleIcon />}
-                                    onClick={() => handleUpdateStatus(selectedTransaction.id, 'Terminé')}
-                                    disabled={selectedTransaction.status === 'Terminé'}
+                                    onClick={() => handleUpdateStatus(selectedTransaction.id, 'completed')}
+                                    disabled={selectedTransaction.status === 'completed'}
                                     sx={{
                                         bgcolor: '#4CAF50',
                                         '&:hover': { bgcolor: '#45a049' },
@@ -385,8 +389,8 @@ export default function AdminTransactions() {
                                     variant="contained"
                                     fullWidth
                                     startIcon={<PendingIcon />}
-                                    onClick={() => handleUpdateStatus(selectedTransaction.id, 'En attente')}
-                                    disabled={selectedTransaction.status === 'En attente'}
+                                    onClick={() => handleUpdateStatus(selectedTransaction.id, 'pending')}
+                                    disabled={selectedTransaction.status === 'pending'}
                                     sx={{
                                         bgcolor: '#FFA726',
                                         '&:hover': { bgcolor: '#FB8C00' },
@@ -400,15 +404,15 @@ export default function AdminTransactions() {
                                     variant="contained"
                                     fullWidth
                                     startIcon={<CancelIcon />}
-                                    onClick={() => handleUpdateStatus(selectedTransaction.id, 'Non vérifié')}
-                                    disabled={selectedTransaction.status === 'Non vérifié'}
+                                    onClick={() => handleUpdateStatus(selectedTransaction.id, 'failed')}
+                                    disabled={selectedTransaction.status === 'failed'}
                                     sx={{
                                         bgcolor: '#EF5350',
                                         '&:hover': { bgcolor: '#E53935' },
                                         '&:disabled': { bgcolor: 'rgba(239, 83, 80, 0.3)' }
                                     }}
                                 >
-                                    Marquer comme Non vérifié
+                                    Marquer comme Échoué
                                 </Button>
                             </Box>
                         </Box>

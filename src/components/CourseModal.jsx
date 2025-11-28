@@ -1,432 +1,326 @@
-// src/components/CourseModal.jsx - Modal détails du cours
-import { useState, useEffect } from 'react'
-import {
-    Dialog,
-    DialogContent,
-    Box,
-    Typography,
-    Button,
-    Chip,
-    IconButton,
-    Grid,
-    Divider,
-    CircularProgress
-} from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
-import PeopleIcon from '@mui/icons-material/People'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import SchoolIcon from '@mui/icons-material/School'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import StarIcon from '@mui/icons-material/Star'
-import { useAuth } from '../context/AuthContext'
+// src/components/CourseModal.jsx
+import React, { useState } from 'react'
+import { X, Users, Clock, BookOpen, PlayCircle, ExternalLink, CreditCard } from 'lucide-react'
 import { supabase } from '../config/supabaseClient'
-import toast from 'react-hot-toast'
+import { useAuth } from '../context/AuthContext'
+import { toast } from 'react-hot-toast'
+import { loadStripe } from '@stripe/stripe-js'
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY)
 
 export default function CourseModal({ open, onClose, course, plan }) {
     const { user } = useAuth()
     const [loading, setLoading] = useState(false)
-    const [alreadyPurchased, setAlreadyPurchased] = useState(false)
+    const [processingPayment, setProcessingPayment] = useState(false)
+    const [isPurchased, setIsPurchased] = useState(false)
 
-    useEffect(() => {
-        if (open && user && course) {
+    React.useEffect(() => {
+        if (open && user) {
             checkIfPurchased()
         }
-    }, [open, user, course])
+    }, [open, user])
 
     const checkIfPurchased = async () => {
         try {
             const { data, error } = await supabase
                 .from('user_courses')
-                .select('id')
+                .select('*')
                 .eq('user_id', user.id)
                 .eq('course_id', course.id)
                 .single()
 
-            setAlreadyPurchased(!!data)
+            if (data) {
+                setIsPurchased(true)
+            }
         } catch (error) {
-            // Pas acheté
-            setAlreadyPurchased(false)
+            setIsPurchased(false)
         }
     }
 
-    // Calculer le prix avec réduction
-    const calculatePrice = () => {
-        if (course.is_free) return 0
+    const discount = plan?.course_discount ?? 0
+    const finalPrice = course.is_free ? 0 : Math.round(course.base_price - (course.base_price * discount / 100))
 
-        const discount = plan?.course_discount ?? 0
-        const finalPrice = course.base_price - (course.base_price * discount / 100)
-        return Math.round(finalPrice)
-    }
-
-    const finalPrice = calculatePrice()
-    const hasDiscount = plan?.course_discount > 0 && !course.is_free
-
-    // Extraire l'ID de la vidéo YouTube
-    const getYouTubeId = (url) => {
-        if (!url) return null
-        const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)
-        return match ? match[1] : null
-    }
-
-    const videoId = getYouTubeId(course.video_url)
-
-    const handlePurchase = async () => {
-        if (alreadyPurchased) {
-            // Rediriger directement vers le cours
-            window.open(course.destination_url, '_blank')
-            return
-        }
-
-        if (course.is_free) {
-            // Cours gratuit - enregistrer directement
-            await handleFreeCourse()
-        } else {
-            // Cours payant - créer Payment Intent Stripe
-            await handlePaidCourse()
-        }
-    }
-
-    const handleFreeCourse = async () => {
+    const handleAddFree = async () => {
         try {
             setLoading(true)
 
             const { error } = await supabase
                 .from('user_courses')
-                .insert([{
+                .insert({
                     user_id: user.id,
                     course_id: course.id,
                     price_paid: 0,
                     discount_applied: 0
-                }])
+                })
 
             if (error) throw error
 
             toast.success('Cours ajouté à votre bibliothèque !')
-            setAlreadyPurchased(true)
+            setIsPurchased(true)
 
-            // Rediriger vers le cours
-            setTimeout(() => {
+            if (course.destination_url) {
                 window.open(course.destination_url, '_blank')
-            }, 1000)
+            }
         } catch (error) {
-            console.error('Erreur ajout cours gratuit:', error)
+            console.error('Erreur ajout cours:', error)
             toast.error('Erreur lors de l\'ajout du cours')
         } finally {
             setLoading(false)
         }
     }
 
-    const handlePaidCourse = async () => {
+    const handlePurchase = async () => {
         try {
-            setLoading(true)
+            setProcessingPayment(true)
+            console.log('💳 Création Payment Intent Stripe...')
 
-            // Créer Payment Intent Stripe
-            const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/super-task`, {
+            const { data: { session: { access_token } } } = await supabase.auth.getSession()
+
+            const response = await fetch(`${SUPABASE_URL}/functions/v1/super-task`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+                    'Authorization': `Bearer ${access_token}`
                 },
                 body: JSON.stringify({
                     courseId: course.id,
                     userId: user.id,
-                    amount: finalPrice,
-                    discount: plan?.course_discount ?? 0
+                    amount: Math.round(finalPrice),
+                    discount: discount
                 })
             })
 
+            const data = await response.json()
+
             if (!response.ok) {
-                throw new Error('Erreur création Payment Intent')
+                throw new Error(data.error || 'Erreur création Payment Intent')
             }
 
-            const { clientSecret, paymentIntentId } = await response.json()
+            console.log('✅ Payment Intent créé:', data.paymentIntentId)
+            console.log('🔑 Client Secret:', data.clientSecret)
 
-            // Rediriger vers page de paiement Stripe (à implémenter)
-            toast.success('Redirection vers le paiement...')
-            // TODO: Implémenter la redirection Stripe Checkout
+            const stripe = await stripePromise
 
+            console.log('🚀 Redirection vers Stripe Checkout...')
+
+            const { error } = await stripe.confirmPayment({
+                clientSecret: data.clientSecret,
+                confirmParams: {
+                    return_url: `${window.location.origin}/payment-success?course_id=${course.id}`,
+                },
+            })
+
+            if (error) {
+                throw error
+            }
         } catch (error) {
-            console.error('Erreur paiement cours:', error)
-            toast.error('Erreur lors de la création du paiement')
-        } finally {
-            setLoading(false)
+            console.error('❌ Erreur paiement:', error)
+            toast.error(error.message || 'Erreur lors du paiement')
+            setProcessingPayment(false)
         }
     }
 
+    const handleAccessCourse = () => {
+        if (course.destination_url) {
+            window.open(course.destination_url, '_blank')
+        }
+    }
+
+    if (!open) return null
+
     return (
-        <Dialog
-            open={open}
-            onClose={onClose}
-            maxWidth="md"
-            fullWidth
-            PaperProps={{
-                sx: {
-                    borderRadius: 2,
-                    maxHeight: '90vh'
-                }
-            }}
-        >
-            <IconButton
-                onClick={onClose}
-                sx={{
-                    position: 'absolute',
-                    right: 8,
-                    top: 8,
-                    bgcolor: 'rgba(0,0,0,0.5)',
-                    color: '#fff',
-                    zIndex: 1,
-                    '&:hover': {
-                        bgcolor: 'rgba(0,0,0,0.7)'
-                    }
-                }}
-            >
-                <CloseIcon />
-            </IconButton>
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex min-h-screen items-center justify-center p-4">
+                <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose} />
 
-            <DialogContent sx={{ p: 0 }}>
-                {/* Vidéo YouTube avec autoplay */}
-                {videoId && (
-                    <Box sx={{ position: 'relative', paddingTop: '56.25%', bgcolor: '#000' }}>
-                        <iframe
-                            style={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: '100%',
-                                border: 'none'
-                            }}
-                            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`}
-                            title={course.title}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        />
-                    </Box>
-                )}
+                <div className="relative bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                    {/* Close Button */}
+                    <button
+                        onClick={onClose}
+                        className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
+                    >
+                        <X size={24} />
+                    </button>
 
-                {/* Contenu du cours */}
-                <Box sx={{ p: 4 }}>
-                    {/* Titre et badges */}
-                    <Box sx={{ mb: 3 }}>
-                        <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
+                    {/* Video */}
+                    {course.video_url && (
+                        <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+                            <iframe
+                                src={`${course.video_url}?autoplay=1&mute=1`}
+                                className="absolute top-0 left-0 w-full h-full"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+                        </div>
+                    )}
+
+                    <div className="p-8">
+                        {/* Badges */}
+                        <div className="flex gap-2 mb-4">
+              <span className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
+                {course.category || 'Général'}
+              </span>
+                            <span className="bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full font-medium">
+                {course.level || 'Tous niveaux'}
+              </span>
                             {course.featured && (
-                                <Chip
-                                    label="TOP-VENTES"
-                                    sx={{
-                                        bgcolor: '#FFC107',
-                                        color: '#000',
-                                        fontWeight: 700
-                                    }}
-                                />
+                                <span className="bg-yellow-400 text-black text-sm px-3 py-1 rounded-full font-bold">
+                  ⭐ TOP-VENTES
+                </span>
                             )}
-                            {course.is_free && (
-                                <Chip
-                                    label="GRATUIT AVEC PLUS"
-                                    sx={{
-                                        bgcolor: '#dc3545',
-                                        color: '#fff',
-                                        fontWeight: 700
-                                    }}
-                                />
-                            )}
-                            <Chip
-                                label={course.category}
-                                sx={{
-                                    bgcolor: '#e3f2fd',
-                                    color: '#1976d2'
-                                }}
-                            />
-                            <Chip
-                                label={course.level}
-                                sx={{
-                                    bgcolor: '#f3e5f5',
-                                    color: '#7b1fa2'
-                                }}
-                            />
-                        </Box>
+                        </div>
 
-                        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+                        {/* Title */}
+                        <h2 className="text-3xl font-bold text-gray-900 mb-2">
                             {course.title}
-                        </Typography>
+                        </h2>
 
-                        <Typography sx={{ color: 'text.secondary', fontSize: '1.1rem', mb: 2 }}>
+                        {/* Tagline */}
+                        <p className="text-lg text-gray-600 mb-6">
                             {course.tagline}
-                        </Typography>
+                        </p>
 
+                        {/* Instructor */}
                         {course.instructor_name && (
-                            <Typography sx={{ color: 'text.secondary', mb: 2 }}>
-                                Un cours proposé par <strong>{course.instructor_name}</strong>
-                            </Typography>
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-12 h-12 bg-gradient-to-r from-[#16f98a] to-[#3EF0D0] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                    {course.instructor_name.charAt(0)}
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-500">Créé par</p>
+                                    <p className="font-semibold text-gray-900">{course.instructor_name}</p>
+                                </div>
+                            </div>
                         )}
-                    </Box>
 
-                    <Divider sx={{ my: 3 }} />
+                        {/* Stats */}
+                        <div className="grid grid-cols-4 gap-4 mb-6">
+                            <div className="flex items-center gap-2">
+                                <Users size={20} className="text-gray-400" />
+                                <div>
+                                    <p className="text-sm text-gray-500">Étudiants</p>
+                                    <p className="font-semibold">{course.students_count?.toLocaleString() || 0}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Clock size={20} className="text-gray-400" />
+                                <div>
+                                    <p className="text-sm text-gray-500">Durée</p>
+                                    <p className="font-semibold">{course.duration_hours}h</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <BookOpen size={20} className="text-gray-400" />
+                                <div>
+                                    <p className="text-sm text-gray-500">Leçons</p>
+                                    <p className="font-semibold">{course.lessons_count}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <PlayCircle size={20} className="text-gray-400" />
+                                <div>
+                                    <p className="text-sm text-gray-500">Niveau</p>
+                                    <p className="font-semibold">{course.level || 'Tous'}</p>
+                                </div>
+                            </div>
+                        </div>
 
-                    {/* Stats du cours */}
-                    <Grid container spacing={3} sx={{ mb: 3 }}>
-                        <Grid item xs={4}>
-                            <Box sx={{ textAlign: 'center' }}>
-                                <PeopleIcon sx={{ fontSize: 32, color: '#16f98a', mb: 1 }} />
-                                <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                    {course.students_count?.toLocaleString() || 0}
-                                </Typography>
-                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                                    Élèves
-                                </Typography>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Box sx={{ textAlign: 'center' }}>
-                                <SchoolIcon sx={{ fontSize: 32, color: '#16f98a', mb: 1 }} />
-                                <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                    {course.lessons_count}
-                                </Typography>
-                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                                    Leçons ({course.duration_hours}h)
-                                </Typography>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Box sx={{ textAlign: 'center' }}>
-                                <AccessTimeIcon sx={{ fontSize: 32, color: '#16f98a', mb: 1 }} />
-                                <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                    {course.level}
-                                </Typography>
-                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                                    Niveau
-                                </Typography>
-                            </Box>
-                        </Grid>
-                    </Grid>
+                        {/* Description */}
+                        {course.description && (
+                            <div className="mb-6">
+                                <h3 className="text-xl font-bold mb-3">À propos de ce cours</h3>
+                                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                                    {course.description}
+                                </p>
+                            </div>
+                        )}
 
-                    <Divider sx={{ my: 3 }} />
-
-                    {/* Description */}
-                    <Box sx={{ mb: 3 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-                            Description
-                        </Typography>
-                        <Typography sx={{ color: 'text.secondary', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
-                            {course.description}
-                        </Typography>
-                    </Box>
-
-                    {/* Avantages */}
-                    {hasDiscount && (
-                        <Box sx={{
-                            bgcolor: '#fff3cd',
-                            border: '1px solid #ffc107',
-                            borderRadius: 2,
-                            p: 2,
-                            mb: 3
-                        }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                                <StarIcon sx={{ color: '#ffc107' }} />
-                                <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                    Votre avantage Plan {plan.name}
-                                </Typography>
-                            </Box>
-                            <Typography sx={{ color: 'text.secondary' }}>
-                                Vous économisez <strong>{plan.course_discount}%</strong> sur ce cours grâce à votre abonnement !
-                            </Typography>
-                        </Box>
-                    )}
-
-                    {/* Prix et bouton d'achat */}
-                    <Box sx={{
-                        bgcolor: '#f8f9fa',
-                        borderRadius: 2,
-                        p: 3,
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        gap: 2
-                    }}>
-                        <Box>
-                            {course.is_free ? (
-                                <Typography variant="h4" sx={{ color: '#4CAF50', fontWeight: 700 }}>
-                                    GRATUIT
-                                </Typography>
-                            ) : (
-                                <Box>
-                                    {hasDiscount && (
-                                        <Typography
-                                            sx={{
-                                                textDecoration: 'line-through',
-                                                color: 'text.secondary',
-                                                fontSize: '1.2rem'
-                                            }}
-                                        >
-                                            {course.base_price?.toLocaleString()} MGA
-                                        </Typography>
+                        {/* Price & CTA */}
+                        <div className="border-t pt-6">
+                            <div className="flex items-center justify-between mb-6">
+                                <div>
+                                    {course.is_free ? (
+                                        <p className="text-3xl font-bold text-green-600">GRATUIT</p>
+                                    ) : (
+                                        <div>
+                                            {discount > 0 ? (
+                                                <>
+                                                    <div className="flex items-center gap-3">
+                            <span className="text-gray-400 line-through text-lg">
+                              {course.base_price?.toLocaleString()} MGA
+                            </span>
+                                                        <span className="text-3xl font-bold text-red-600">
+                              {finalPrice.toLocaleString()} MGA
+                            </span>
+                                                    </div>
+                                                    <span className="inline-block bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full mt-2">
+                            -{discount}% avec {plan?.name}
+                          </span>
+                                                </>
+                                            ) : (
+                                                <p className="text-3xl font-bold text-gray-900">
+                                                    {course.base_price?.toLocaleString()} MGA
+                                                </p>
+                                            )}
+                                        </div>
                                     )}
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <Typography variant="h4" sx={{ color: '#dc3545', fontWeight: 700 }}>
-                                            {finalPrice.toLocaleString()} MGA
-                                        </Typography>
-                                        {hasDiscount && (
-                                            <Chip
-                                                label={`-${plan.course_discount}%`}
-                                                sx={{
-                                                    bgcolor: '#dc3545',
-                                                    color: '#fff',
-                                                    fontWeight: 700
-                                                }}
-                                            />
+                                </div>
+                            </div>
+
+                            <div className="flex gap-3">
+                                {isPurchased ? (
+                                    <button
+                                        onClick={handleAccessCourse}
+                                        className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg"
+                                    >
+                                        <ExternalLink size={20} />
+                                        Accéder au cours
+                                    </button>
+                                ) : course.is_free ? (
+                                    <button
+                                        onClick={handleAddFree}
+                                        disabled={loading}
+                                        className="flex-1 bg-gradient-to-r from-[#16f98a] to-[#3EF0D0] hover:from-[#14d97a] hover:to-[#3BE0C0] disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-[#010F1B] font-bold py-4 px-6 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg"
+                                    >
+                                        {loading ? (
+                                            <>
+                                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                                Ajout en cours...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <BookOpen size={20} />
+                                                Ajouter à ma bibliothèque
+                                            </>
                                         )}
-                                    </Box>
-                                </Box>
-                            )}
-                        </Box>
-
-                        <Button
-                            variant="contained"
-                            size="large"
-                            onClick={handlePurchase}
-                            disabled={loading}
-                            startIcon={alreadyPurchased ? <CheckCircleIcon /> : null}
-                            sx={{
-                                bgcolor: alreadyPurchased ? '#4CAF50' : '#16f98a',
-                                color: '#010F1B',
-                                fontWeight: 700,
-                                fontSize: '1.1rem',
-                                px: 4,
-                                py: 1.5,
-                                minWidth: 200,
-                                '&:hover': {
-                                    bgcolor: alreadyPurchased ? '#45a049' : '#3EF0D0'
-                                },
-                                '&:disabled': {
-                                    bgcolor: '#ccc'
-                                }
-                            }}
-                        >
-                            {loading ? (
-                                <CircularProgress size={24} sx={{ color: '#010F1B' }} />
-                            ) : alreadyPurchased ? (
-                                'Accéder au cours'
-                            ) : course.is_free ? (
-                                'Ajouter à ma bibliothèque'
-                            ) : (
-                                'Acheter maintenant'
-                            )}
-                        </Button>
-                    </Box>
-
-                    {/* Note sur l'accès */}
-                    {!alreadyPurchased && (
-                        <Typography sx={{
-                            color: 'text.secondary',
-                            fontSize: '0.85rem',
-                            mt: 2,
-                            textAlign: 'center'
-                        }}>
-                            En ligne et à votre rythme • {course.lessons_count} leçons • {course.duration_hours}h de contenu
-                        </Typography>
-                    )}
-                </Box>
-            </DialogContent>
-        </Dialog>
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={handlePurchase}
+                                        disabled={processingPayment}
+                                        className="flex-1 bg-gradient-to-r from-[#16f98a] to-[#3EF0D0] hover:from-[#14d97a] hover:to-[#3BE0C0] disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-[#010F1B] font-bold py-4 px-6 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                                    >
+                                        {processingPayment ? (
+                                            <>
+                                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                                Préparation du paiement...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <CreditCard size={20} />
+                                                Acheter maintenant
+                                            </>
+                                        )}
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 }
