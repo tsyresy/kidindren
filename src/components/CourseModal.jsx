@@ -14,7 +14,6 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import VolumeUpIcon from '@mui/icons-material/VolumeUp'
-import VolumeOffIcon from '@mui/icons-material/VolumeOff'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { supabase } from '../config/supabaseClient'
 import { useAuth } from '../context/AuthContext'
@@ -42,7 +41,6 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
         const match = url.match(regExp)
 
         if (match && match[2].length === 11) {
-            // Essayer d'abord sans mute, puis avec si échec
             const muteParam = muted ? '&mute=1' : ''
             return `https://www.youtube.com/embed/${match[2]}?autoplay=1${muteParam}&loop=1&playlist=${match[2]}`
         }
@@ -56,7 +54,6 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
             const timer = setTimeout(async () => {
                 if (videoRef.current) {
                     try {
-                        // Essayer d'abord AVEC le son
                         videoRef.current.muted = false
                         await videoRef.current.play()
                         setIsMuted(false)
@@ -65,7 +62,6 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
                     } catch (err) {
                         console.log('❌ Autoplay avec son bloqué, essai avec mute:', err)
                         try {
-                            // Si échec, réessayer en muted
                             videoRef.current.muted = true
                             await videoRef.current.play()
                             setIsMuted(true)
@@ -106,36 +102,44 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
             return
         }
 
-        if (course.is_free) {
+        const price = calculatePrice()
+
+        // Cours gratuit - DEUX vérifications (is_free OU price = 0)
+        if (course.is_free || price === 0) {
             try {
                 setLoading(true)
+
+                // Insertion avec price_paid obligatoire
                 const { error } = await supabase
                     .from('user_courses')
                     .insert({
                         user_id: user.id,
                         course_id: course.id,
-                        enrolled_at: new Date().toISOString()
+                        price_paid: 0  // OBLIGATOIRE même pour cours gratuits
                     })
 
                 if (error && error.code !== '23505') throw error
 
-                toast.success('Cours ajouté à votre bibliothèque !')
+                toast.success('Cours ajouté à votre bibliothèque !', {
+                    icon: '🎉',
+                    duration: 3000
+                })
                 onClose()
 
-                setTimeout(() => {
-                    if (course.destination_url) {
-                        window.open(course.destination_url, '_blank')
-                    }
-                }, 500)
+                // Redirection immédiate dans nouvel onglet
+                if (course.destination_url) {
+                    window.open(course.destination_url, '_blank')
+                }
             } catch (error) {
                 console.error('Erreur inscription gratuite:', error)
                 toast.error('Erreur lors de l\'inscription')
             } finally {
                 setLoading(false)
             }
-            return
+            return // STOP ICI - ne pas ouvrir le modal de paiement
         }
 
+        // Cours payant uniquement
         onPurchaseClick(course)
     }
 
@@ -180,7 +184,7 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
                 {course.video_url ? (
                     <Box sx={{ position: 'relative', paddingTop: '56.25%', bgcolor: '#000' }}>
                         {isYouTube && youtubeEmbedUrl ? (
-                            // YouTube iframe - essaie autoplay sans mute d'abord
+                            // YouTube iframe
                             <iframe
                                 ref={iframeRef}
                                 src={youtubeEmbedUrl}
@@ -197,7 +201,7 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
                                 }}
                             />
                         ) : (
-                            // Vidéo standard (cloud, Vimeo, etc.)
+                            // Vidéo standard
                             <>
                                 <video
                                     ref={videoRef}
@@ -215,7 +219,7 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
                                     }}
                                 />
 
-                                {/* Bouton unmute si nécessaire */}
+                                {/* Bouton unmute */}
                                 {showUnmuteButton && (
                                     <IconButton
                                         onClick={handleUnmute}
@@ -249,7 +253,7 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
                                     </IconButton>
                                 )}
 
-                                {/* Indicateur son actif */}
+                                {/* Badge son actif */}
                                 {!isMuted && !showUnmuteButton && (
                                     <Box
                                         sx={{
@@ -276,7 +280,6 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
                         )}
                     </Box>
                 ) : (
-                    // Fallback avec thumbnail
                     <Box
                         sx={{
                             position: 'relative',
@@ -386,7 +389,7 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
 
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, flexWrap: 'wrap' }}>
                     <Box>
-                        {course.is_free ? (
+                        {course.is_free || finalPrice === 0 ? (
                             <Typography variant="h4" sx={{ fontWeight: 700, color: '#059669' }}>
                                 GRATUIT
                             </Typography>
@@ -438,7 +441,7 @@ export default function CourseModal({ open, onClose, course, plan, onPurchaseCli
                             }
                         }}
                     >
-                        {loading ? '...' : course.is_free ? 'Commencer gratuitement' : 'Acheter maintenant'}
+                        {loading ? '...' : (course.is_free || finalPrice === 0) ? 'Commencer gratuitement' : 'Acheter maintenant'}
                     </Button>
                 </Box>
             </DialogContent>

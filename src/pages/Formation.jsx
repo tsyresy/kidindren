@@ -56,6 +56,15 @@ export default function Formation() {
     }
 
     const handlePurchaseClick = (course) => {
+        // Double vérification - ne jamais ouvrir modal pour cours gratuits
+        const discount = plan?.course_discount ?? 0
+        const finalPrice = course.base_price - (course.base_price * discount / 100)
+
+        if (course.is_free || finalPrice === 0) {
+            console.log('Cours gratuit détecté - pas de modal de paiement')
+            return
+        }
+
         setModalOpen(false)
         setCourseForPayment(course)
         setPaymentModalOpen(true)
@@ -95,17 +104,17 @@ export default function Formation() {
                         </h1>
                         {plan && plan.course_discount > 0 && (
                             <div style={{ marginTop: '16px' }}>
-                <span style={{
-                    display: 'inline-block',
-                    background: '#fbbf24',
-                    color: '#010F1B',
-                    fontWeight: 700,
-                    fontSize: '14px',
-                    padding: '8px 16px',
-                    borderRadius: '20px'
-                }}>
-                  ⭐ RÉDUCTION {plan.course_discount}% - Plan {plan.name}
-                </span>
+                                <span style={{
+                                    display: 'inline-block',
+                                    background: '#fbbf24',
+                                    color: '#010F1B',
+                                    fontWeight: 700,
+                                    fontSize: '14px',
+                                    padding: '8px 16px',
+                                    borderRadius: '20px'
+                                }}>
+                                    ⭐ RÉDUCTION {plan.course_discount}% - Plan {plan.name}
+                                </span>
                             </div>
                         )}
                         <p style={{ fontSize: '15px', marginTop: '12px', color: '#010F1B', opacity: 0.9 }}>
@@ -163,12 +172,12 @@ export default function Formation() {
 
                                     <div className="course-content">
                                         <div className="course-badges">
-                      <span className="category-badge category">
-                        {course.category || 'Général'}
-                      </span>
+                                            <span className="category-badge category">
+                                                {course.category || 'Général'}
+                                            </span>
                                             <span className="category-badge level">
-                        {course.level || 'Tous niveaux'}
-                      </span>
+                                                {course.level || 'Tous niveaux'}
+                                            </span>
                                         </div>
 
                                         <h3 className="course-title">{course.title}</h3>
@@ -200,21 +209,21 @@ export default function Formation() {
                                         </div>
 
                                         <div className="course-price">
-                                            {course.is_free ? (
+                                            {course.is_free || finalPrice === 0 ? (
                                                 <p className="price-free">GRATUIT</p>
                                             ) : hasDiscount ? (
                                                 <div>
                                                     <div className="price-wrapper">
-                            <span className="price-original">
-                              {originalPrice?.toLocaleString()} MGA
-                            </span>
+                                                        <span className="price-original">
+                                                            {originalPrice?.toLocaleString()} MGA
+                                                        </span>
                                                         <span className="price-final">
-                              {finalPrice.toLocaleString()} MGA
-                            </span>
+                                                            {finalPrice.toLocaleString()} MGA
+                                                        </span>
                                                     </div>
                                                     <span className="price-discount">
-                            -{plan.course_discount}%
-                          </span>
+                                                        -{plan.course_discount}%
+                                                    </span>
                                                 </div>
                                             ) : (
                                                 <p className="price-final">

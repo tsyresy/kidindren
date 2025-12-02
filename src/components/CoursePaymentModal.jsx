@@ -167,8 +167,12 @@ export default function CoursePaymentModal({ isOpen, onClose, course, user, plan
     }
 
     useEffect(() => {
-        if (isOpen && course && user) {
-            createPaymentIntent()
+        // IMPORTANT: Ne pas créer Payment Intent pour les cours gratuits
+        if (isOpen && course && user && !course.is_free) {
+            const price = calculatePrice()
+            if (price > 0) {
+                createPaymentIntent()
+            }
         }
     }, [isOpen, course, user])
 
@@ -178,6 +182,15 @@ export default function CoursePaymentModal({ isOpen, onClose, course, user, plan
 
         try {
             const finalPrice = calculatePrice()
+
+            // Double vérification : ne jamais créer Payment Intent avec montant 0
+            if (finalPrice <= 0) {
+                console.error('Tentative de créer Payment Intent avec montant 0')
+                setError('Erreur: montant invalide')
+                setLoading(false)
+                return
+            }
+
             console.log('Création Payment Intent pour cours:', course.title, finalPrice)
 
             const { data, error: funcError } = await supabase.functions.invoke('super-responder', {
