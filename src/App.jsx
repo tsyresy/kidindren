@@ -1,4 +1,4 @@
-// src/App.jsx - CODE COMPLET MIS À JOUR
+// src/App.jsx - CODE COMPLET à jour AVEC SUPPORT
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -16,19 +16,17 @@ import Paypal from './pages/Paypal'
 import Subscription from './pages/Subscription'
 import Formation from './pages/Formation'
 import About from './pages/About'
+import Support from './pages/Support'
 
 // Flows de transaction
 import DepositFlow from './pages/deposit-flow'
 import WithdrawalFlow from './pages/withdrawal-flow'
 
-// ========================================
-// IMPORTS ADMIN - NOUVEAUX
-// ========================================
+// Pages Admin
 import AdminLayout from './components/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminTransactions from './pages/admin/AdminTransactions'
 import AdminCourses from './pages/admin/AdminCourses'
-// ========================================
 
 function App() {
     return (
@@ -110,9 +108,17 @@ function App() {
                         }
                     />
 
-                    {/* ========================================
-                        ROUTES ADMIN - NOUVELLES
-                        ======================================== */}
+                    {/* Route Support */}
+                    <Route
+                        path="/support"
+                        element={
+                            <ProtectedRoute>
+                                <Support />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* Routes Admin */}
                     <Route
                         path="/admin"
                         element={
@@ -125,7 +131,6 @@ function App() {
                         <Route path="transactions" element={<AdminTransactions />} />
                         <Route path="courses" element={<AdminCourses />} />
                     </Route>
-                    {/* ======================================== */}
 
                     {/* Redirection pour les routes invalides */}
                     <Route path="*" element={<Navigate to="/" replace />} />

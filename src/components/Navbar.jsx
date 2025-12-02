@@ -108,6 +108,21 @@ export default function Navbar() {
                         >
                             À propos
                         </Button>
+                        <Button
+                            component={Link}
+                            to="/support"
+                            sx={{
+                                color: isActive('/support') ? '#16f98a' : '#010F1B',
+                                fontWeight: 600,
+                                fontSize: '1rem',
+                                textTransform: 'capitalize',
+                                borderBottom: isActive('/support') ? '2px solid #16f98a' : 'none',
+                                pb: 0.5,
+                                '&:hover': { color: '#16f98a' }
+                            }}
+                        >
+                            Support
+                        </Button>
                     </Box>
 
                     {/* Profil utilisateur */}
@@ -115,9 +130,7 @@ export default function Navbar() {
                         {/* Badge Membership */}
                         <MembershipBadge />
 
-                        {/* ========================================
-                            NOUVELLE ICÔNE ADMIN - UNIQUEMENT VISIBLE POUR LES ADMINS
-                            ======================================== */}
+                        {/* Icône Admin */}
                         {isAdmin && (
                             <Tooltip title="Panel Admin" arrow>
                                 <IconButton
@@ -136,7 +149,6 @@ export default function Navbar() {
                                 </IconButton>
                             </Tooltip>
                         )}
-                        {/* ======================================== */}
 
                         {/* Avatar et Nom */}
                         <Box
