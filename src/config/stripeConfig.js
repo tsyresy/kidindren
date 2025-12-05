@@ -1,7 +1,7 @@
 // src/config/stripeConfig.js
 import { loadStripe } from '@stripe/stripe-js'
 
-// Clé publique Stripe (mode TEST)
+// Clé publique Stripe (mode TEST par défaut, à changer manuellement pour PROD)
 const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY
 
 // Charger Stripe
