@@ -1,0 +1,12 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /support
+Disallow: /dashboard
+Disallow: /paypal
+Disallow: /formation
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://payvilus.vercel.app/sitemap.xml
