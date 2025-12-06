@@ -1,9 +1,10 @@
-// src/pages/Landing.jsx - CODE COMPLET MIS À JOUR
+// src/pages/Landing.jsx - AVEC COURSES PREVIEW
 import { useState } from 'react'
 import SplashLoading from '../components/SplashLoading'
 import LandingHero from '../components/LandingHero'
 import LandingCTA from '../components/LandingCTA'
 import ExchangeRate from '../components/ExchangeRate'
+import CoursesPreview from '../components/CoursesPreview'
 import WhyUs from '../components/WhyUs'
 import LandingAbout from '../components/LandingAbout'
 import Testimonials from '../components/Testimonials'
@@ -46,6 +47,7 @@ export default function Landing() {
                         <LandingHero />
                         <LandingCTA />
                         <ExchangeRate />
+                        <CoursesPreview />
                         <WhyUs />
                         <LandingAbout />
                         <section id="avis">
