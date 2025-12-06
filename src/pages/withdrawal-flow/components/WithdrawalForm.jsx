@@ -1,4 +1,4 @@
-// src/pages/withdrawal-flow/components/WithdrawalForm.jsx - CORRECTION DU BUG
+// src/pages/withdrawal-flow/components/WithdrawalForm.jsx - AVEC MONTANT MINIMUM 10
 import { useState, useEffect } from 'react'
 import { Box, TextField, MenuItem, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, Alert, Checkbox, FormControlLabel } from '@mui/material'
 import ReCAPTCHA from 'react-google-recaptcha'
@@ -6,8 +6,11 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import CalculateIcon from '@mui/icons-material/Calculate'
 import ShieldIcon from '@mui/icons-material/Shield'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import WarningIcon from '@mui/icons-material/Warning'
 
 export default function WithdrawalForm({ onSubmit, plan }) {
+    const MINIMUM_AMOUNT = 10 // Montant minimum requis
+
     const [formData, setFormData] = useState({
         amount: '',
         currency: 'EUR',
@@ -40,7 +43,6 @@ export default function WithdrawalForm({ onSubmit, plan }) {
             if (!isNaN(amount) && amount > 0) {
                 const rate = formData.currency === 'EUR' ? 4800 : 4500
                 const baseAmount = amount * rate
-                // ✅ CORRECTION ICI : || remplacé par ??
                 const commissionRate = (plan.commission_rate ?? 15) / 100
                 const finalAmount = baseAmount * (1 - commissionRate)
                 setCalculatedMGA(Math.round(finalAmount))
@@ -53,9 +55,13 @@ export default function WithdrawalForm({ onSubmit, plan }) {
     }, [formData.amount, formData.currency, plan])
 
     useEffect(() => {
+        const amount = parseFloat(formData.amount)
+
+        // ✅ Validation du montant minimum
+        const isAmountValid = formData.amount && !isNaN(amount) && amount >= MINIMUM_AMOUNT
+
         const isValid =
-            formData.amount &&
-            parseFloat(formData.amount) > 0 &&
+            isAmountValid &&
             formData.currency &&
             formData.mobileOperator &&
             formData.mobileNumber &&
@@ -64,11 +70,21 @@ export default function WithdrawalForm({ onSubmit, plan }) {
             formData.termsAccepted
 
         setIsFormValid(isValid)
+
+        // ✅ Gestion de l'erreur de montant minimum
+        if (formData.amount && amount < MINIMUM_AMOUNT) {
+            setErrors(prev => ({
+                ...prev,
+                amount: `Le montant minimum est de ${MINIMUM_AMOUNT} ${formData.currency}`
+            }))
+        } else if (errors.amount) {
+            setErrors(prev => ({ ...prev, amount: '' }))
+        }
     }, [formData])
 
     const handleInputChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }))
-        if (errors[field]) {
+        if (errors[field] && field !== 'amount') {
             setErrors(prev => ({ ...prev, [field]: '' }))
         }
     }
@@ -79,6 +95,17 @@ export default function WithdrawalForm({ onSubmit, plan }) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        // ✅ Double vérification du montant minimum avant soumission
+        const amount = parseFloat(formData.amount)
+        if (amount < MINIMUM_AMOUNT) {
+            setErrors(prev => ({
+                ...prev,
+                amount: `Le montant minimum est de ${MINIMUM_AMOUNT} ${formData.currency}`
+            }))
+            return
+        }
+
         if (isFormValid) {
             onSubmit(formData, calculatedMGA)
         }
@@ -120,10 +147,13 @@ export default function WithdrawalForm({ onSubmit, plan }) {
                                 value={formData.amount}
                                 onChange={(e) => handleInputChange('amount', e.target.value)}
                                 error={!!errors.amount}
-                                helperText={errors.amount}
+                                helperText={errors.amount || `Montant minimum : ${MINIMUM_AMOUNT} ${formData.currency}`}
                                 required
                                 fullWidth
-                                inputProps={{ min: 1, step: 0.01 }}
+                                inputProps={{
+                                    min: MINIMUM_AMOUNT,  // ✅ Montant minimum défini
+                                    step: 0.01
+                                }}
                             />
                             <TextField
                                 select
@@ -141,8 +171,15 @@ export default function WithdrawalForm({ onSubmit, plan }) {
                             </TextField>
                         </Box>
 
+                        {/* ✅ Alerte si montant insuffisant */}
+                        {formData.amount && parseFloat(formData.amount) < MINIMUM_AMOUNT && (
+                            <Alert severity="warning" icon={<WarningIcon />}>
+                                Le montant doit être d'au moins <strong>{MINIMUM_AMOUNT} {formData.currency}</strong> pour effectuer un retrait.
+                            </Alert>
+                        )}
+
                         {/* Calcul MGA */}
-                        {calculatedMGA > 0 && (
+                        {calculatedMGA > 0 && parseFloat(formData.amount) >= MINIMUM_AMOUNT && (
                             <Box sx={{
                                 bgcolor: '#f0fdf4',
                                 border: '1px solid #4caf50',
@@ -159,7 +196,6 @@ export default function WithdrawalForm({ onSubmit, plan }) {
                                     {calculatedMGA.toLocaleString('fr-FR')} MGA
                                 </Typography>
                                 <Typography variant="caption" color="text.secondary">
-                                    {/* ✅ CORRECTION ICI : || remplacé par ?? */}
                                     Après déduction de {plan?.commission_rate ?? 15}% • Taux: {formData.currency === 'EUR' ? '4 800' : '4 500'} MGA/{formData.currency}
                                 </Typography>
                             </Box>
@@ -276,6 +312,10 @@ export default function WithdrawalForm({ onSubmit, plan }) {
                                 py: 1.5,
                                 '&:hover': {
                                     background: 'linear-gradient(135deg, #3EF0D0, #16f98a)'
+                                },
+                                '&:disabled': {
+                                    background: '#e0e0e0',
+                                    color: '#9e9e9e'
                                 }
                             }}
                         >
@@ -296,11 +336,13 @@ export default function WithdrawalForm({ onSubmit, plan }) {
                         <strong>2. Traitement:</strong> Les transactions prennent 1-24 heures pour vérification manuelle.
                     </Typography>
                     <Typography variant="body2" paragraph>
-                        {/* ✅ CORRECTION ICI : || remplacé par ?? */}
                         <strong>3. Frais:</strong> Des frais de {plan?.commission_rate ?? 15}% s'appliquent selon votre plan.
                     </Typography>
                     <Typography variant="body2" paragraph>
-                        <strong>4. Conformité:</strong> Service conforme à la Loi malgache N° 2014-006.
+                        <strong>4. Montant minimum:</strong> Le montant minimum par retrait est de {MINIMUM_AMOUNT} EUR/USD.
+                    </Typography>
+                    <Typography variant="body2" paragraph>
+                        <strong>5. Conformité:</strong> Service conforme à la Loi malgache N° 2014-006.
                     </Typography>
                 </DialogContent>
                 <DialogActions>
