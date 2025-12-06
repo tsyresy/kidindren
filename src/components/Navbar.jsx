@@ -1,4 +1,4 @@
-// src/components/Navbar.jsx
+// src/components/Navbar.jsx - CODE COMPLET SANS ERREUR
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Box, Button, AppBar, Toolbar, Container, Stack, IconButton, Tooltip } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -95,13 +95,13 @@ export default function Navbar() {
                         </Button>
                         <Button
                             component={Link}
-                            to="/about"
+                            to="/about-app"
                             sx={{
-                                color: isActive('/about') ? '#16f98a' : '#010F1B',
+                                color: isActive('/about-app') ? '#16f98a' : '#010F1B',
                                 fontWeight: 600,
                                 fontSize: '1rem',
                                 textTransform: 'capitalize',
-                                borderBottom: isActive('/about') ? '2px solid #16f98a' : 'none',
+                                borderBottom: isActive('/about-app') ? '2px solid #16f98a' : 'none',
                                 pb: 0.5,
                                 '&:hover': { color: '#16f98a' }
                             }}
