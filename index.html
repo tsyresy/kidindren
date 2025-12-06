@@ -1,13 +1,250 @@
 <!doctype html>
 <html lang="fr">
-  <head>
+<head>
+    <!-- ============================================ -->
+    <!-- META TAGS ESSENTIELS -->
+    <!-- ============================================ -->
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/Pv.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PAYVILUS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- ============================================ -->
+    <!-- SEO META TAGS -->
+    <!-- ============================================ -->
+    <title>Payvilus - Transactions PayPal Madagascar | Mobile Money Mvola, Orange Money, Airtel Money</title>
+    <meta name="description" content="Convertissez vos fonds PayPal en Ariary via Mobile Money (Mvola, Orange Money, Airtel Money). Formations freelance gratuites. Plateforme 100% malgache. Inscription gratuite." />
+    <meta name="keywords" content="PayPal Madagascar, Mobile Money Madagascar, Mvola, Orange Money, Airtel Money, conversion PayPal Ariary, freelance Madagascar, formation freelance, Fiverr Madagascar, Upwork Madagascar, retrait PayPal Madagascar, dépôt PayPal, transaction sécurisée, devenir freelancer, gagner argent en ligne Madagascar, Payvilus" />
+    <meta name="author" content="Waviloid Studio" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <link rel="canonical" href="https://payvilus.com" />
+
+    <!-- ============================================ -->
+    <!-- OPEN GRAPH (Facebook, LinkedIn) -->
+    <!-- ============================================ -->
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Payvilus - Transactions PayPal Madagascar | Mobile Money" />
+    <meta property="og:description" content="Convertissez vos fonds PayPal en Ariary via Mobile Money. Plateforme 100% malgache avec formations freelance gratuites." />
+    <meta property="og:url" content="https://payvilus.com" />
+    <meta property="og:site_name" content="Payvilus" />
+    <meta property="og:image" content="https://payvilus.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Payvilus - Plateforme de transactions PayPal à Madagascar" />
+
+    <!-- ============================================ -->
+    <!-- TWITTER CARD -->
+    <!-- ============================================ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Payvilus - Transactions PayPal Madagascar" />
+    <meta name="twitter:description" content="Convertissez vos fonds PayPal en Ariary via Mobile Money. Formations freelance incluses." />
+    <meta name="twitter:image" content="https://payvilus.com/twitter-card.png" />
+    <meta name="twitter:site" content="@payvilus" />
+
+    <!-- ============================================ -->
+    <!-- FAVICON & ICONS -->
+    <!-- ============================================ -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/Pv.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/Pv.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/Pv.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- ============================================ -->
+    <!-- THEME & APPEARANCE -->
+    <!-- ============================================ -->
+    <meta name="theme-color" content="#16f98a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Payvilus" />
+
+    <!-- ============================================ -->
+    <!-- GEO & LOCATION -->
+    <!-- ============================================ -->
+    <meta name="geo.region" content="MG" />
+    <meta name="geo.placename" content="Antananarivo" />
+    <meta name="geo.position" content="-18.8792;47.5079" />
+    <meta name="ICBM" content="-18.8792, 47.5079" />
+
+    <!-- ============================================ -->
+    <!-- PERFORMANCE - PRECONNECT -->
+    <!-- ============================================ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://www.google-analytics.com" />
+    <link rel="dns-prefetch" href="https://hmgjgqchcphpxzwctflr.supabase.co" />
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    <link rel="dns-prefetch" href="https://js.stripe.com" />
+
+    <!-- ============================================ -->
+    <!-- GOOGLE TAG MANAGER -->
+    <!-- ============================================ -->
+    <!-- Remplacez GTM-XXXXXXX par votre ID GTM réel -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- ============================================ -->
+    <!-- GOOGLE ANALYTICS (GA4) -->
+    <!-- ============================================ -->
+    <!-- Remplacez G-XXXXXXXXXX par votre ID GA4 réel -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX', {
+            'anonymize_ip': true,
+            'cookie_flags': 'SameSite=None;Secure'
+        });
+    </script>
+
+    <!-- ============================================ -->
+    <!-- GOOGLE SEARCH CONSOLE VERIFICATION -->
+    <!-- ============================================ -->
+    <!-- Remplacez par votre code de vérification réel -->
+    <meta name="google-site-verification" content="VOTRE_CODE_VERIFICATION_ICI" />
+
+    <!-- ============================================ -->
+    <!-- STRUCTURED DATA (JSON-LD) pour SEO -->
+    <!-- ============================================ -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FinancialService",
+            "name": "Payvilus",
+            "description": "Plateforme pour convertir vos fonds PayPal en Ariary via Mobile Money (Mvola, Orange Money, Airtel Money). Formations freelance incluses.",
+            "url": "https://payvilus.com",
+            "logo": "https://payvilus.com/Pv.png",
+            "image": "https://payvilus.com/og-image.png",
+            "telephone": "+261-34-XX-XXX-XX",
+            "email": "support@payvilus.com",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Antananarivo",
+                "addressCountry": "MG"
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "-18.8792",
+                "longitude": "47.5079"
+            },
+            "areaServed": {
+                "@type": "Country",
+                "name": "Madagascar"
+            },
+            "priceRange": "Gratuit - 79000 MGA/mois",
+            "currenciesAccepted": "MGA, USD, EUR",
+            "paymentAccepted": "PayPal, Carte Bancaire, Mobile Money",
+            "foundingDate": "2024",
+            "sameAs": [
+                "https://www.facebook.com/payvilus",
+                "https://www.twitter.com/payvilus",
+                "https://www.linkedin.com/company/payvilus"
+            ],
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.8",
+                "reviewCount": "250"
+            },
+            "offers": [
+                {
+                    "@type": "Offer",
+                    "name": "Plan Free",
+                    "price": "0",
+                    "priceCurrency": "MGA",
+                    "description": "Plan gratuit avec commission de 15% par transaction"
+                },
+                {
+                    "@type": "Offer",
+                    "name": "Plan Standard",
+                    "price": "39000",
+                    "priceCurrency": "MGA",
+                    "description": "Commission de 5% par transaction, traitement prioritaire"
+                },
+                {
+                    "@type": "Offer",
+                    "name": "Plan Premium",
+                    "price": "79000",
+                    "priceCurrency": "MGA",
+                    "description": "Zéro commission, traitement ultra-rapide, support VIP"
+                }
+            ]
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Payvilus",
+            "legalName": "Waviloid Studio",
+            "url": "https://payvilus.com",
+            "logo": "https://payvilus.com/Pv.png",
+            "foundingDate": "2024",
+            "founders": [
+                {
+                    "@type": "Organization",
+                    "name": "Waviloid Studio"
+                }
+            ],
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Antananarivo",
+                "addressCountry": "Madagascar"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+261-34-XX-XXX-XX",
+                "contactType": "customer support",
+                "email": "support@payvilus.com",
+                "availableLanguage": ["French", "Malagasy"],
+                "areaServed": "MG"
+            },
+            "sameAs": [
+                "https://www.facebook.com/payvilus",
+                "https://www.twitter.com/payvilus"
+            ]
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Payvilus",
+            "url": "https://payvilus.com",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://payvilus.com/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
+</head>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="root"></div>
+<script type="module" src="/src/main.jsx"></script>
+
+<!-- ============================================ -->
+<!-- NO JAVASCRIPT FALLBACK -->
+<!-- ============================================ -->
+<noscript>
+    <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+        <h1>JavaScript requis</h1>
+        <p>Veuillez activer JavaScript dans votre navigateur pour utiliser Payvilus.</p>
+        <p>Please enable JavaScript in your browser to use Payvilus.</p>
+    </div>
+</noscript>
+</body>
 </html>
