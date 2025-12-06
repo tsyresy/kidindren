@@ -764,7 +764,7 @@ export default function LandingAboutPage() {
                         © {new Date().getFullYear()} Payvilus. Tous droits réservés. | Made with ❤️ by Waviloid Studio in Madagascar
                     </Typography>
                     <Typography variant="caption" sx={{ textAlign: 'center', display: 'block', mt: 2, color: '#64748b' }}>
-                        Mots-clés SEO : PayPal Madagascar, Mobile Money Madagascar, Mvola, Orange Money, Airtel Money,
+                        PayPal Madagascar, Mobile Money Madagascar, Mvola, Orange Money, Airtel Money,
                         conversion PayPal Ariary, freelance Madagascar, formation freelance, Fiverr Madagascar, Upwork Madagascar,
                         transaction sécurisée Madagascar, devenir freelancer, gagner argent en ligne Madagascar
                     </Typography>
