@@ -1,4 +1,4 @@
-// src/pages/LandingAboutPage.jsx - PAGE À PROPOS PUBLIQUE (SEO OPTIMISÉE)
+// src/pages/LandingAboutPage.jsx - CODE COMPLET CORRIGÉ
 import { Box, Container, Typography, Grid, Card, CardContent, Button, Avatar, Accordion, AccordionSummary, AccordionDetails, Chip } from '@mui/material'
 import {
     RocketLaunch,
@@ -22,7 +22,8 @@ import {
     AttachMoney,
     MenuBook,
     Timeline,
-    EmojiEvents
+    EmojiEvents,
+    Schedule
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Landing.css'
@@ -140,25 +141,25 @@ export default function LandingAboutPage() {
             name: 'Équipe Technique',
             role: 'Développement & Innovation',
             description: 'Développeurs malgaches passionnés qui construisent et maintiennent la plateforme.',
-            icon: <RocketLaunch />
+            icon: <RocketLaunch sx={{ fontSize: 40, color: '#16f98a' }} />
         },
         {
             name: 'Équipe Support',
             role: 'Service Client 24/7',
             description: 'Support bilingue (français/malgache) disponible pour répondre à toutes vos questions.',
-            icon: <Support />
+            icon: <Support sx={{ fontSize: 40, color: '#16f98a' }} />
         },
         {
             name: 'Équipe Finance',
             role: 'Transactions & Sécurité',
             description: 'Spécialistes qui garantissent la sécurité et la rapidité de vos transactions.',
-            icon: <Security />
+            icon: <Security sx={{ fontSize: 40, color: '#16f98a' }} />
         },
         {
             name: 'Équipe Formation',
             role: 'Éducation Digitale',
             description: 'Experts freelance qui créent des contenus pédagogiques de qualité.',
-            icon: <School />
+            icon: <School sx={{ fontSize: 40, color: '#16f98a' }} />
         }
     ]
 
@@ -289,7 +290,7 @@ export default function LandingAboutPage() {
                                     }
                                 }}
                             >
-                                <Box sx={{ color: '#16f98a', mb: 2 }}>
+                                <Box sx={{ color: '#16f98a', mb: 2, fontSize: 40 }}>
                                     {stat.icon}
                                 </Box>
                                 <Typography
