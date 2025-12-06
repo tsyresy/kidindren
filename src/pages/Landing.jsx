@@ -1,4 +1,4 @@
-// src/pages/Landing.jsx
+// src/pages/Landing.jsx - CODE COMPLET MIS À JOUR
 import { useState } from 'react'
 import SplashLoading from '../components/SplashLoading'
 import LandingHero from '../components/LandingHero'
@@ -33,6 +33,7 @@ export default function Landing() {
                             <nav className="landing-nav">
                                 <a href="#pourquoi-nous">Services</a>
                                 <a href="#avis">Avis</a>
+                                <a href="/about">À propos</a>
                             </nav>
                             <div className="landing-ctas">
                                 <a href="/login" className="btn-nav-secondary">Connexion</a>
@@ -62,25 +63,25 @@ export default function Landing() {
                             <div className="footer-section">
                                 <h4>Services</h4>
                                 <ul>
-                                    <li><a href="#paypal">Transactions PayPal</a></li>
-                                    <li><a href="#formation">Formations Digitales</a></li>
-                                    <li><a href="#freelance">Devenir Freelancer</a></li>
+                                    <li><a href="/about#services">Transactions PayPal</a></li>
+                                    <li><a href="/about#services">Formations Digitales</a></li>
+                                    <li><a href="/about">Devenir Freelancer</a></li>
                                 </ul>
                             </div>
                             <div className="footer-section">
                                 <h4>Ressources</h4>
                                 <ul>
-                                    <li><a href="#about">À propos</a></li>
-                                    <li><a href="#contact">Contact</a></li>
-                                    <li><a href="#blog">Blog</a></li>
+                                    <li><a href="/about">À propos</a></li>
+                                    <li><a href="/about#contact">Contact</a></li>
+                                    <li><a href="/about">Blog</a></li>
                                 </ul>
                             </div>
                             <div className="footer-section">
                                 <h4>Légal</h4>
                                 <ul>
-                                    <li><a href="#privacy">Confidentialité</a></li>
-                                    <li><a href="#terms">Conditions d'utilisation</a></li>
-                                    <li><a href="#security">Sécurité</a></li>
+                                    <li><a href="/about">Confidentialité</a></li>
+                                    <li><a href="/terms">Conditions d'utilisation</a></li>
+                                    <li><a href="/about">Sécurité</a></li>
                                 </ul>
                             </div>
                         </div>

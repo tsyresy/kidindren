@@ -1,10 +1,12 @@
-// src/App.jsx - CODE COMPLET à jour AVEC SUPPORT
+// src/App.jsx - CODE COMPLET INTÉGRAL MIS À JOUR
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 
 // Pages publiques
 import Landing from './pages/Landing'
+import LandingAboutPage from './pages/LandingAboutPage'
+import TermsOfService from './pages/TermsOfService'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
@@ -38,6 +40,8 @@ function App() {
 
                     {/* Routes publiques - Landing */}
                     <Route path="/landing" element={<Landing />} />
+                    <Route path="/about" element={<LandingAboutPage />} />
+                    <Route path="/terms" element={<TermsOfService />} />
 
                     {/* Routes publiques - Authentification */}
                     <Route path="/login" element={<Login />} />
@@ -99,8 +103,10 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
+
+                    {/* Route About protégée (pour utilisateurs connectés) */}
                     <Route
-                        path="/about"
+                        path="/about-app"
                         element={
                             <ProtectedRoute>
                                 <About />
