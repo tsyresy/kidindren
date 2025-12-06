@@ -765,7 +765,7 @@ export default function LandingAboutPage() {
                     </Typography>
                     <Typography variant="caption" sx={{ textAlign: 'center', display: 'block', mt: 2, color: '#64748b' }}>
                         PayPal Madagascar, Mobile Money Madagascar, Mvola, Orange Money, Airtel Money,
-                        conversion PayPal Ariary, freelance Madagascar, formation freelance, Fiverr Madagascar, Upwork Madagascar,
+                        conversion PayPal Ariary, freelance Madagascar, Linkedin, formation freelance, Fiverr Madagascar, Upwork Madagascar,
                         transaction sécurisée Madagascar, devenir freelancer, gagner argent en ligne Madagascar
                     </Typography>
                 </Container>
