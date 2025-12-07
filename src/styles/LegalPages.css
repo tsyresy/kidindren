@@ -1,0 +1,820 @@
+/* src/styles/LegalPages.css - STYLES POUR TOUTES LES PAGES LÉGALES */
+
+/* ============================================
+   LEGAL PAGE WRAPPER
+============================================ */
+.legal-page-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #010F1B 0%, #0A1828 100%);
+}
+
+/* ============================================
+   LEGAL CONTENT
+============================================ */
+.legal-content {
+    padding: 8rem 2rem 4rem;
+}
+
+.legal-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    padding: 4rem;
+    border: 1px solid rgba(22, 249, 138, 0.1);
+}
+
+.legal-container h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #16f98a;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    text-shadow: 0 0 30px rgba(22, 249, 138, 0.3);
+}
+
+.legal-intro {
+    font-size: 1.2rem;
+    color: #d1d5db;
+    line-height: 1.8;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(22, 249, 138, 0.1);
+}
+
+.legal-date {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.95rem;
+    margin-bottom: 3rem;
+}
+
+/* ============================================
+   LEGAL SECTIONS
+============================================ */
+.legal-section {
+    margin-bottom: 4rem;
+}
+
+.legal-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #16f98a;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(22, 249, 138, 0.2);
+}
+
+.legal-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.legal-section h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.legal-section p {
+    color: #d1d5db;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+}
+
+.legal-section ul,
+.legal-section ol {
+    color: #d1d5db;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+}
+
+.legal-section li {
+    margin-bottom: 0.75rem;
+    font-size: 1.05rem;
+}
+
+.legal-section strong {
+    color: #16f98a;
+    font-weight: 600;
+}
+
+.legal-section a {
+    color: #16f98a;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.legal-section a:hover {
+    color: #13d177;
+}
+
+/* Highlight Section */
+.highlight-section {
+    background: rgba(22, 249, 138, 0.05);
+    border-left: 4px solid #16f98a;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+/* ============================================
+   LEGAL IMAGES
+============================================ */
+.legal-image {
+    width: 100%;
+    margin: 3rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.legal-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ============================================
+   LEGAL TABLES
+============================================ */
+.legal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.legal-table thead {
+    background: rgba(22, 249, 138, 0.1);
+}
+
+.legal-table th {
+    padding: 1rem;
+    text-align: left;
+    color: #16f98a;
+    font-weight: 700;
+    border-bottom: 2px solid rgba(22, 249, 138, 0.3);
+}
+
+.legal-table td {
+    padding: 1rem;
+    color: #d1d5db;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.legal-table tbody tr:hover {
+    background: rgba(22, 249, 138, 0.05);
+}
+
+.legal-table .highlight-row {
+    background: rgba(22, 249, 138, 0.1);
+    font-weight: 600;
+}
+
+.highlight-text {
+    color: #16f98a !important;
+    font-weight: 700;
+}
+
+/* ============================================
+   GRIDS
+============================================ */
+.problem-grid,
+.features-grid,
+.advantages-grid,
+.rights-grid,
+.tips-grid,
+.tools-grid,
+.contact-methods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.problem-card,
+.feature-card,
+.advantage-card,
+.right-card,
+.tip-card,
+.tool-card,
+.contact-method-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(22, 249, 138, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.problem-card:hover,
+.feature-card:hover,
+.advantage-card:hover,
+.right-card:hover,
+.tip-card:hover,
+.tool-card:hover,
+.contact-method-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(22, 249, 138, 0.3);
+    box-shadow: 0 10px 30px rgba(22, 249, 138, 0.15);
+}
+
+.problem-card h4,
+.feature-card h4,
+.advantage-card h4,
+.right-card h4,
+.tip-card h4,
+.tool-card h4 {
+    color: #16f98a;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+/* ============================================
+   CONTACT SPECIFIC
+============================================ */
+.contact-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.contact-detail {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #16f98a;
+    margin-bottom: 1rem;
+}
+
+.contact-detail a {
+    color: #16f98a;
+    text-decoration: none;
+}
+
+.contact-detail a:hover {
+    text-decoration: underline;
+}
+
+.contact-desc {
+    font-size: 1rem;
+    color: #d1d5db;
+    line-height: 1.6;
+}
+
+/* ============================================
+   CONTACT FORM
+============================================ */
+.contact-form-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    margin: 3rem 0;
+}
+
+.contact-form {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(22, 249, 138, 0.1);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    color: #e5e7eb;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(22, 249, 138, 0.2);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #16f98a;
+    box-shadow: 0 0 0 3px rgba(22, 249, 138, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.contact-submit-btn {
+    width: 100%;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, #16f98a 0%, #13d177 100%);
+    color: #010F1B;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.contact-submit-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px rgba(22, 249, 138, 0.4);
+}
+
+.form-success {
+    padding: 1rem;
+    background: rgba(22, 249, 138, 0.1);
+    border: 1px solid #16f98a;
+    border-radius: 8px;
+    color: #16f98a;
+    margin-bottom: 1rem;
+}
+
+.form-error {
+    padding: 1rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    border-radius: 8px;
+    color: #ef4444;
+    margin-bottom: 1rem;
+}
+
+.contact-form-info {
+    background: rgba(22, 249, 138, 0.05);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(22, 249, 138, 0.1);
+}
+
+.contact-form-info h4 {
+    color: #16f98a;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.contact-form-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.contact-form-info li {
+    margin-bottom: 0.75rem;
+    color: #d1d5db;
+    font-size: 0.95rem;
+}
+
+/* ============================================
+   STEPS & ROADMAP
+============================================ */
+.steps-container,
+.roadmap-container {
+    margin: 2rem 0;
+}
+
+.step-item,
+.roadmap-step {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border-left: 4px solid #16f98a;
+}
+
+.step-number,
+.roadmap-number {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #16f98a 0%, #13d177 100%);
+    color: #010F1B;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.step-content h4,
+.roadmap-step h3 {
+    color: #16f98a;
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+}
+
+.roadmap-tip,
+.roadmap-warning {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.roadmap-tip {
+    background: rgba(22, 249, 138, 0.1);
+    border-left: 3px solid #16f98a;
+    color: #d1d5db;
+}
+
+.roadmap-warning {
+    background: rgba(251, 191, 36, 0.1);
+    border-left: 3px solid #fbbf24;
+    color: #fcd34d;
+}
+
+.roadmap-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #16f98a;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid #16f98a;
+    padding-bottom: 2px;
+    transition: all 0.3s ease;
+}
+
+.roadmap-link:hover {
+    color: #13d177;
+    border-bottom-color: #13d177;
+}
+
+/* ============================================
+   PRICING CARDS
+============================================ */
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.pricing-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(22, 249, 138, 0.1);
+    border-radius: 16px;
+    padding: 2.5rem;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(22, 249, 138, 0.3);
+    box-shadow: 0 20px 40px rgba(22, 249, 138, 0.2);
+}
+
+.pricing-card.featured {
+    border-color: #16f98a;
+    background: rgba(22, 249, 138, 0.05);
+}
+
+.pricing-card .badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #010F1B;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.pricing-card h3 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.pricing-card .price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #16f98a;
+    margin-bottom: 2rem;
+}
+
+.pricing-card .price span {
+    font-size: 1rem;
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.pricing-card ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.pricing-card li {
+    padding: 0.75rem 0;
+    color: #d1d5db;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pricing-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: rgba(22, 249, 138, 0.1);
+    border: 2px solid #16f98a;
+    color: #16f98a;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.pricing-btn:hover {
+    background: rgba(22, 249, 138, 0.2);
+    transform: scale(1.05);
+}
+
+.pricing-btn.primary {
+    background: linear-gradient(135deg, #16f98a 0%, #13d177 100%);
+    color: #010F1B;
+    border-color: #16f98a;
+}
+
+.pricing-btn.primary:hover {
+    box-shadow: 0 10px 30px rgba(22, 249, 138, 0.4);
+}
+
+/* ============================================
+   BADGES & BANNERS
+============================================ */
+.security-badge,
+.legal-warning,
+.legal-note {
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.security-badge {
+    background: rgba(22, 249, 138, 0.1);
+    border-left: 4px solid #16f98a;
+    color: #d1d5db;
+}
+
+.legal-warning {
+    background: rgba(251, 191, 36, 0.1);
+    border-left: 4px solid #fbbf24;
+    color: #fcd34d;
+}
+
+.legal-note {
+    background: rgba(59, 130, 246, 0.1);
+    border-left: 4px solid #3b82f6;
+    color: #93c5fd;
+    font-style: italic;
+}
+
+.legal-final-banner {
+    background: linear-gradient(135deg, rgba(22, 249, 138, 0.1) 0%, rgba(22, 249, 138, 0.05) 100%);
+    border: 2px solid rgba(22, 249, 138, 0.3);
+    border-radius: 16px;
+    padding: 3rem;
+    text-align: center;
+    margin-top: 4rem;
+}
+
+.legal-final-banner h3 {
+    color: #16f98a;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.legal-final-banner p {
+    color: #d1d5db;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1.25rem 3rem;
+    background: linear-gradient(135deg, #16f98a 0%, #13d177 100%);
+    color: #010F1B;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(22, 249, 138, 0.4);
+}
+
+/* ============================================
+   FAQ
+============================================ */
+.faq-item,
+.quick-faq .faq-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid #16f98a;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.faq-item h4 {
+    color: #16f98a;
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+}
+
+.faq-item p {
+    color: #d1d5db;
+    line-height: 1.7;
+}
+
+.faq-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: #16f98a;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid #16f98a;
+}
+
+.faq-link:hover {
+    color: #13d177;
+    border-bottom-color: #13d177;
+}
+
+/* ============================================
+   TESTIMONIALS & SUCCESS STORIES
+============================================ */
+.testimonials-grid,
+.success-stories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.testimonial-card,
+.story-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(22, 249, 138, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+.testimonial-text,
+.story-text {
+    color: #d1d5db;
+    font-style: italic;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.testimonial-author {
+    color: #16f98a;
+    font-weight: 600;
+}
+
+.story-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(22, 249, 138, 0.1);
+}
+
+.story-header h4 {
+    color: #ffffff;
+    margin: 0;
+}
+
+.story-income {
+    background: linear-gradient(135deg, #16f98a 0%, #13d177 100%);
+    color: #010F1B;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   SOCIAL LINKS
+============================================ */
+.social-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(22, 249, 138, 0.1);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    transform: translateY(-5px);
+    border-color: rgba(22, 249, 138, 0.3);
+    box-shadow: 0 10px 30px rgba(22, 249, 138, 0.15);
+}
+
+.social-icon {
+    font-size: 2.5rem;
+}
+
+.social-link h4 {
+    color: #16f98a;
+    margin: 0 0 0.25rem 0;
+}
+
+.social-link p {
+    color: #9ca3af;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+@media (max-width: 1024px) {
+    .legal-container {
+        padding: 3rem 2rem;
+    }
+
+    .contact-form-container {
+        grid-template-columns: 1fr;
+    }
+
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .legal-content {
+        padding: 6rem 1.5rem 3rem;
+    }
+
+    .legal-container {
+        padding: 2rem 1.5rem;
+    }
+
+    .legal-container h1 {
+        font-size: 2rem;
+    }
+
+    .legal-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .step-item,
+    .roadmap-step {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .problem-grid,
+    .features-grid,
+    .advantages-grid,
+    .rights-grid,
+    .tips-grid,
+    .tools-grid,
+    .contact-methods-grid {
+        grid-template-columns: 1fr;
+    }
+}

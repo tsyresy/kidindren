@@ -1,16 +1,26 @@
-// src/App.jsx - CODE COMPLET INTÉGRAL MIS À JOUR
+// src/App.jsx - AVEC ScrollToTop INTÉGRÉ
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import ScrollToTop from './components/ScrollToTop'
 
 // Pages publiques
 import Landing from './pages/Landing'
 import LandingAboutPage from './pages/LandingAboutPage'
 import TermsOfService from './pages/TermsOfService'
+import Confidentialite from './pages/Confidentialite'
+import Securite from './pages/Securite'
+import Contact from './pages/Contact'
+import Blog from './pages/Blog'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import UpdatePassword from './pages/UpdatePassword'
+
+// Pages Services
+import TransactionsPaypal from './pages/services/TransactionsPaypal'
+import FormationsDigitales from './pages/services/FormationsDigitales'
+import DevenirFreelancer from './pages/services/DevenirFreelancer'
 
 // Pages protégées
 import Dashboard from './pages/Dashboard'
@@ -34,6 +44,9 @@ function App() {
     return (
         <Router>
             <AuthProvider>
+                {/* ✅ AJOUT DU ScrollToTop ICI */}
+                <ScrollToTop />
+
                 <Routes>
                     {/* Route par défaut - Landing page */}
                     <Route path="/" element={<Landing />} />
@@ -41,7 +54,20 @@ function App() {
                     {/* Routes publiques - Landing */}
                     <Route path="/landing" element={<Landing />} />
                     <Route path="/about" element={<LandingAboutPage />} />
+
+                    {/* Routes publiques - Légal */}
                     <Route path="/terms" element={<TermsOfService />} />
+                    <Route path="/confidentialite" element={<Confidentialite />} />
+                    <Route path="/securite" element={<Securite />} />
+
+                    {/* Routes publiques - Ressources */}
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/blog" element={<Blog />} />
+
+                    {/* Routes publiques - Services */}
+                    <Route path="/services/transactions-paypal" element={<TransactionsPaypal />} />
+                    <Route path="/services/formations-digitales" element={<FormationsDigitales />} />
+                    <Route path="/services/devenir-freelancer" element={<DevenirFreelancer />} />
 
                     {/* Routes publiques - Authentification */}
                     <Route path="/login" element={<Login />} />
