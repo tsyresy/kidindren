@@ -1,4 +1,4 @@
-/* src/styles/Landing.css - LANDING PAGE COMPLÈTE */
+/* src/styles/Landing.css - LANDING PAGE INTERNATIONALE COMPLÈTE */
 
 :root {
     --payvilus-primary: #16f98a;
@@ -116,6 +116,310 @@
     object-fit: cover;
 }
 
+/* ============================================ */
+/* BANNIÈRE VISION INTERNATIONALE */
+/* ============================================ */
+.global-vision-banner {
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, var(--payvilus-darker) 0%, var(--payvilus-dark) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.global-vision-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(22, 249, 138, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.vision-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.vision-content {
+    text-align: center;
+}
+
+.vision-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.vision-subtitle {
+    font-size: 1.1rem;
+    color: var(--payvilus-light);
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.vision-subtitle strong {
+    color: var(--payvilus-primary);
+    font-weight: 700;
+}
+
+.vision-countries {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.country-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(22, 249, 138, 0.3);
+    border-radius: 30px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.country-flag:hover {
+    background: rgba(22, 249, 138, 0.2);
+    border-color: var(--payvilus-primary);
+    transform: translateY(-2px);
+}
+
+.country-flag-more {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
+    color: var(--payvilus-dark);
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.country-flag-more:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(22, 249, 138, 0.4);
+}
+
+/* ============================================ */
+/* SERVICES PRINCIPAUX */
+/* ============================================ */
+.services-section {
+    padding: 5rem 2rem;
+    background: white;
+}
+
+.section-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-header-center {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--payvilus-dark);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.section-description {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.service-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-top: 4px solid var(--payvilus-primary);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--payvilus-primary), var(--payvilus-accent));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover::before {
+    transform: scaleX(1);
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(22, 249, 138, 0.2);
+}
+
+.service-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.service-icon svg {
+    width: 32px;
+    height: 32px;
+    color: white;
+}
+
+.service-icon.transactions {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.service-icon.formations {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.service-icon.visibility {
+    background: linear-gradient(135deg, #ec4899, #db2777);
+}
+
+.service-icon.marketplace {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.service-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--payvilus-dark);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.service-description {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.service-features {
+    list-style: none;
+    margin: 1.5rem 0;
+}
+
+.service-features li {
+    padding: 0.5rem 0;
+    color: var(--payvilus-dark);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.service-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
+    color: var(--payvilus-dark);
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.service-btn:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 20px rgba(22, 249, 138, 0.3);
+}
+
+.service-seo-keywords {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    margin-top: 1rem;
+    line-height: 1.4;
+    font-style: italic;
+}
+
+/* Marketplace Card Special */
+.marketplace-card {
+    position: relative;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-top-color: #f59e0b;
+}
+
+.marketplace-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 20px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.marketplace-btn {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.marketplace-btn:hover {
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
 /* ===== LANDING CTA ===== */
 .landing-cta-section {
     padding: 5rem 2rem;
@@ -215,21 +519,6 @@
 .exchange-container {
     max-width: 1200px;
     margin: 0 auto;
-}
-
-.section-title {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--payvilus-dark);
-    margin-bottom: 3rem;
-}
-
-.text-gradient {
-    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
 .exchange-info {
@@ -439,9 +728,128 @@
 }
 
 /* ============================================ */
+/* PRÉSENCE MONDIALE */
+/* ============================================ */
+.worldwide-presence {
+    padding: 5rem 2rem;
+    background: linear-gradient(180deg, white 0%, var(--payvilus-light) 100%);
+}
+
+.countries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.country-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.country-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--payvilus-primary);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.country-card:hover::before {
+    transform: scaleX(1);
+}
+
+.country-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(22, 249, 138, 0.2);
+}
+
+.country-flag-large {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.country-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--payvilus-dark);
+    margin-bottom: 1rem;
+}
+
+.country-services {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.country-details {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.detail-item {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--payvilus-light);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--payvilus-dark);
+}
+
+.expansion-notice {
+    text-align: center;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, rgba(22, 249, 138, 0.1), rgba(62, 240, 208, 0.1));
+    border-radius: 16px;
+    border: 2px solid var(--payvilus-primary);
+}
+
+.expansion-text {
+    font-size: 1.1rem;
+    color: var(--payvilus-dark);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.expansion-text strong {
+    color: var(--payvilus-primary);
+    font-weight: 700;
+}
+
+.expansion-btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
+    color: var(--payvilus-dark);
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.expansion-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(22, 249, 138, 0.3);
+}
+
+/* ============================================ */
 /* COURSES PREVIEW SECTION */
 /* ============================================ */
-
 .courses-preview-section {
     padding: 5rem 2rem;
     background: linear-gradient(180deg, var(--payvilus-light) 0%, #ffffff 100%);
@@ -926,6 +1334,170 @@
     border-radius: 8px;
 }
 
+/* ============================================ */
+/* WAVILOID STUDIO SECTION */
+/* ============================================ */
+.waviloid-section {
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.waviloid-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.waviloid-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--payvilus-dark);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.waviloid-title .highlight {
+    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.waviloid-description {
+    font-size: 1.1rem;
+    color: #475569;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.waviloid-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-top: 2.5rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(22, 249, 138, 0.2);
+}
+
+.stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.waviloid-image img {
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.waviloid-image img:hover {
+    transform: scale(1.02);
+}
+
+/* ============================================ */
+/* CTA FINAL */
+/* ============================================ */
+.final-cta {
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, var(--payvilus-darker) 0%, var(--payvilus-dark) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(22, 249, 138, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.final-cta .cta-container {
+    position: relative;
+    z-index: 1;
+}
+
+.final-cta .cta-title {
+    color: white;
+}
+
+.final-cta .cta-description {
+    font-size: 1.2rem;
+    color: var(--payvilus-light);
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.8;
+}
+
+.cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.25rem 2.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.cta-btn.primary {
+    background: linear-gradient(135deg, var(--payvilus-primary), var(--payvilus-accent));
+    color: var(--payvilus-dark);
+}
+
+.cta-btn.primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 40px rgba(22, 249, 138, 0.4);
+}
+
+.cta-btn.secondary {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+}
+
+.cta-btn.secondary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4);
+}
+
+.btn-icon {
+    width: 24px;
+    height: 24px;
+}
+
 /* ===== LANDING FOOTER ===== */
 .landing-footer {
     background: var(--payvilus-dark);
@@ -995,7 +1567,9 @@
     font-size: 0.85rem;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ============================================
+   RESPONSIVE
+============================================ */
 @media (max-width: 1024px) {
     .landing-navbar-content {
         gap: 1rem;
@@ -1007,6 +1581,19 @@
 
     .cta-title {
         font-size: 2rem;
+    }
+
+    .waviloid-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .waviloid-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
     }
 
     .why-us-content,
@@ -1034,6 +1621,35 @@
 }
 
 @media (max-width: 768px) {
+    .vision-title {
+        font-size: 1.5rem;
+    }
+
+    .vision-subtitle {
+        font-size: 1rem;
+    }
+
+    .vision-countries {
+        gap: 1rem;
+    }
+
+    .country-flag {
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .section-description {
+        font-size: 1rem;
+    }
+
+    .countries-grid {
+        grid-template-columns: 1fr;
+    }
+
     .landing-navbar-content {
         flex-wrap: wrap;
     }
@@ -1074,6 +1690,11 @@
         font-size: 0.75rem;
     }
 
+    .waviloid-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
     .footer-content {
         grid-template-columns: 1fr;
     }
@@ -1102,5 +1723,32 @@
     .btn-cta-large {
         padding: 0.875rem 2rem;
         font-size: 1rem;
+    }
+
+    .cta-title {
+        font-size: 2rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .cta-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .services-section,
+    .worldwide-presence,
+    .waviloid-section,
+    .final-cta {
+        padding: 4rem 1.5rem;
+    }
+
+    .waviloid-stats {
+        grid-template-columns: 1fr;
     }
 }
