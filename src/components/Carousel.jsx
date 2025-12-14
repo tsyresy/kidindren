@@ -24,6 +24,11 @@ export default function Carousel() {
             image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop',
             title: 'Accompagnement Personnalisé',
             description: 'Un support dédié pour tous vos projets'
+        },{
+            id: 3,
+            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop',
+            title: 'Accompagnement Personnalisé',
+            description: 'Un support dédié pour tous vos projets'
         },
         {
             id: 4,

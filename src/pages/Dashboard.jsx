@@ -8,6 +8,8 @@ import Testimonials from '../components/Testimonials'
 import '../styles/Dashboard.css'
 
 export default function Dashboard() {
+    const currentYear = new Date().getFullYear()
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <Navbar />
@@ -42,12 +44,12 @@ export default function Dashboard() {
                             <h4>Support</h4>
                             <ul>
                                 <li><a href="/about">À propos</a></li>
-                                <li><a href="mailto:contact@payvilus.store">Contact</a></li>
+                                <li><a href="mailto:support@payvilus.com">Contact</a></li>
                             </ul>
                         </div>
                     </div>
                     <div className="footer-bottom">
-                        <p>© 2024 Payvilus. Tous droits réservés.</p>
+                        <p>© {currentYear} Payvilus. Tous droits réservés.</p>
                     </div>
                 </div>
             </Box>
