@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom'
 import '../styles/Landing.css'
 
 export default function LandingFooter() {
+    const currentYear = new Date().getFullYear()
+
     return (
         <footer className="landing-footer">
             <div className="footer-content">
                 <div className="footer-section">
                     <h3>Payvilus</h3>
                     <p>Plateforme complète pour freelancers digitaux</p>
-                    <p className="footer-meta">Propulsée par Waviloid Studio | 2025</p>
+                    <p className="footer-meta">Propulsée par Waviloid Studio | {currentYear}</p>
                 </div>
 
                 <div className="footer-section">
@@ -41,7 +43,7 @@ export default function LandingFooter() {
             </div>
 
             <div className="footer-bottom">
-                <p>© 2025 Payvilus. Tous droits réservés. | Made with ❤️ by Waviloid Studio</p>
+                <p>© {currentYear} Payvilus. Tous droits réservés. | Made with ❤️ by Waviloid Studio</p>
             </div>
         </footer>
     )

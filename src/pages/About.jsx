@@ -1,5 +1,6 @@
 // src/pages/About.jsx - VERSION UTILISATEURS CONNECTÉS
-import { Box, Container, Typography, Grid, Card, CardContent, Avatar, Chip, Divider, Button } from '@mui/material'
+import { useState, useEffect, useRef } from 'react'
+import { Box, Container, Typography, Grid, Card, CardContent, Avatar, Chip, Divider, Button, LinearProgress } from '@mui/material'
 import {
     Email,
     Phone,
@@ -22,6 +23,43 @@ import { useAuth } from '../context/AuthContext'
 export default function About() {
     const navigate = useNavigate()
     const { user } = useAuth()
+
+    // ===== ANIMATION LINEAR BUFFER =====
+    const [progress, setProgress] = useState(0)
+    const [buffer, setBuffer] = useState(10)
+    const progressRef = useRef(() => {})
+
+    useEffect(() => {
+        progressRef.current = () => {
+            if (progress === 100) {
+                setProgress(0)
+                setBuffer(10)
+            } else {
+                setProgress(progress + 1)
+                if (buffer < 100 && progress % 5 === 0) {
+                    const newBuffer = buffer + 1 + Math.random() * 10
+                    setBuffer(newBuffer > 100 ? 100 : newBuffer)
+                }
+            }
+        }
+    })
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            progressRef.current()
+        }, 100)
+        return () => {
+            clearInterval(timer)
+        }
+    }, [])
+
+    // ===== DATE AUTOMATIQUE =====
+    const currentYear = new Date().getFullYear()
+    const currentDate = new Date().toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    })
 
     // Informations de contact
     const contactInfo = [
@@ -348,18 +386,39 @@ export default function About() {
 
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
                             <Chip label="Version 1.0.0" size="small" />
-                            <Chip label="Dernière mise à jour: Décembre 2024" size="small" />
+                            <Chip label={`Dernière mise à jour: ${currentDate}`} size="small" />
                             <Chip label="Statut: Opérationnel ✅" color="success" size="small" />
                         </Box>
                     </CardContent>
                 </Card>
+
+                {/* ===== ANIMATION LINEAR BUFFER ===== */}
+                <Box sx={{ width: '100%', mt: 4 }}>
+                    <LinearProgress
+                        variant="buffer"
+                        value={progress}
+                        valueBuffer={buffer}
+                        sx={{
+                            height: 6,
+                            borderRadius: 3,
+                            bgcolor: 'rgba(22, 249, 138, 0.1)',
+                            '& .MuiLinearProgress-bar': {
+                                bgcolor: '#16f98a',
+                                borderRadius: 3
+                            },
+                            '& .MuiLinearProgress-dashed': {
+                                backgroundImage: 'radial-gradient(rgba(22, 249, 138, 0.3) 0%, rgba(22, 249, 138, 0.3) 16%, transparent 42%)'
+                            }
+                        }}
+                    />
+                </Box>
             </Container>
 
             {/* Footer */}
             <Box sx={{ bgcolor: 'white', py: 4, borderTop: '1px solid #e2e8f0', mt: 4 }}>
                 <Container maxWidth="lg">
                     <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
-                        © {new Date().getFullYear()} Payvilus. Tous droits réservés. | Made with ❤️ in Madagascar
+                        © {currentYear} Payvilus. Tous droits réservés. | Made with ❤️ in Madagascar
                     </Typography>
                 </Container>
             </Box>
