@@ -1,4 +1,4 @@
-/* src/styles/Auth.css - PAYVILUS THEME - CODE COMPLET */
+/* src/styles/Auth.css - PAYVILUS THEME - CODE COMPLET CORRIGÉ */
 
 /* ===== VARIABLES CSS ===== */
 :root {
@@ -113,6 +113,13 @@
     font-size: 15px;
     transition: all 0.3s ease;
     box-sizing: border-box;
+    background-color: white;
+    color: var(--payvilus-dark); /* ✅ TEXTE VISIBLE EN NOIR */
+}
+
+.form-group input::placeholder {
+    color: #999; /* Placeholder gris */
+    opacity: 1;
 }
 
 .form-group input:focus {
@@ -129,8 +136,14 @@
     font-size: 15px;
     transition: all 0.3s ease;
     box-sizing: border-box;
-    background-color: white;
+    background-color: white; /* ✅ FOND BLANC AU LIEU DE VERT */
+    color: var(--payvilus-dark); /* ✅ TEXTE VISIBLE EN NOIR */
     cursor: pointer;
+}
+
+.form-group select option {
+    color: var(--payvilus-dark); /* ✅ OPTIONS VISIBLES EN NOIR */
+    background-color: white;
 }
 
 .form-group select:focus {
