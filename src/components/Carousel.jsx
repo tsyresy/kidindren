@@ -9,25 +9,25 @@ export default function Carousel() {
     const slides = [
         {
             id: 1,
-            image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=1200&h=675&fit=crop',
+            image: 'https://images.unsplash.com/photo-1732258356976-a84f6e18621c?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             title: 'Transactions PayPal Sécurisées',
             description: 'Échangez facilement entre PayPal et Mobile Money'
         },
         {
             id: 2,
-            image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=675&fit=crop',
+            image: 'https://images.unsplash.com/photo-1756885427018-86c8c5969c5b?q=80&w=1411&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             title: 'Formations Certifiantes',
             description: 'Développez vos compétences digitales avec nos experts'
         },
         {
             id: 3,
-            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop',
+            image: 'https://images.unsplash.com/photo-1713085155480-674f18d7ade9?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             title: 'Accompagnement Personnalisé',
             description: 'Un support dédié pour tous vos projets'
         },{
             id: 3,
-            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop',
-            title: 'Accompagnement Personnalisé',
+            image: 'https://images.unsplash.com/photo-1694903089438-bf28d4697d9a?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            title: 'Maitrise du monde Digital & IA',
             description: 'Un support dédié pour tous vos projets'
         },
         {
