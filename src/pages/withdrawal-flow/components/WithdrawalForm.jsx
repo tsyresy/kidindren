@@ -41,7 +41,7 @@ export default function WithdrawalForm({ onSubmit, plan }) {
         if (formData.amount && plan) {
             const amount = parseFloat(formData.amount)
             if (!isNaN(amount) && amount > 0) {
-                const rate = formData.currency === 'EUR' ? 4800 : 4500
+                const rate = formData.currency === 'EUR' ? 4650 : 4400
                 const baseAmount = amount * rate
                 const commissionRate = (plan.commission_rate ?? 15) / 100
                 const finalAmount = baseAmount * (1 - commissionRate)

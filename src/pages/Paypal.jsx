@@ -1,4 +1,4 @@
-// src/pages/Paypal.jsx - CORRECTION DU BUG commission_rate: 0
+// src/pages/Paypal.jsx - ce qui doit s'afficher après clic sur Paypal ou Transaction Paypal etc..
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {

@@ -1,4 +1,4 @@
-// src/pages/Formation.jsx
+// src/pages/Formation.jsx page 
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../config/supabaseClient'
 import { useAuth } from '../context/AuthContext'

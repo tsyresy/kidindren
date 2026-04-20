@@ -1,4 +1,4 @@
-// src/pages/deposit-flow/components/AmountInput.jsx - CORRECTION DU BUG
+// src/pages/deposit-flow/components/AmountInput.jsx -
 import { Box, TextField, MenuItem, Typography } from '@mui/material'
 
 export default function AmountInput({ amount, setAmount, currency, setCurrency, mgaAmount, plan, error }) {
