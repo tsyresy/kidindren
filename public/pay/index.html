@@ -22,60 +22,138 @@
         #message.error{background:rgba(255,77,109,0.15);color:#ff4d6d;border:1px solid rgba(255,77,109,0.3)}
         #message.success{background:rgba(22,249,138,0.15);color:#16f98a;border:1px solid rgba(22,249,138,0.3)}
         .lock{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;color:rgba(255,255,255,0.3);font-size:11px}
-        .loading{text-align:center;padding:40px;color:#16f98a}
+        .loading{text-align:center;padding:40px;color:#16f98a;font-size:14px}
+        .error-box{background:rgba(255,77,109,0.12);border:1px solid rgba(255,77,109,0.3);border-radius:12px;padding:16px;text-align:center;color:#ff4d6d;font-size:13px;margin-top:20px}
     </style>
 </head>
 <body>
-<div id="app">
-    <div class="loading" id="loading">Chargement...</div>
-</div>
+<div id="root"><div class="loading">Chargement du formulaire...</div></div>
 <script>
-    const params       = new URLSearchParams(window.location.search)
-    const clientSecret = params.get('cs')
-    const planName     = params.get('plan') || 'Premium'
-    const amount       = parseInt(params.get('amount') || '0')
-    const stripeKey    = params.get('pk')
+    // Clé publique Stripe LIVE — intégrée directement dans la page
+    var STRIPE_PK = 'pk_live_51SWQ8FRiwYd4yGU054SfyNy50x67CNJtGLivnlbP8bBN1vHilvlVcmG7rNgMQEv7KkOCrfZqUomoLuWdxUfyf8RF00rwVCT744'
 
-    if (!clientSecret || !stripeKey) {
-        document.getElementById('loading').textContent = 'Paramètres manquants'
+    // Lecture des paramètres URL
+    var params       = new URLSearchParams(window.location.search)
+    var clientSecret = params.get('cs')
+    var planName     = params.get('plan') || 'Premium'
+    var amount       = parseInt(params.get('amount') || '0', 10)
+
+    console.log('cs:', clientSecret ? clientSecret.substring(0,20)+'...' : 'NULL')
+    console.log('plan:', planName, 'amount:', amount)
+
+    if (!clientSecret) {
+        document.getElementById('root').innerHTML = '<div class="error-box">Erreur : session de paiement invalide.<br/>Veuillez relancer depuis l\'application.</div>'
     } else {
-        document.getElementById('loading').style.display = 'none'
-        document.getElementById('app').innerHTML = `
+        init()
+    }
+
+    function init() {
+        document.getElementById('root').innerHTML = `
         <div class="plan-box">
-          <div class="plan-name">Abonnement ${planName}</div>
-          <div class="plan-price">${amount.toLocaleString('fr-FR')} MGA</div>
+          <div class="plan-name">Abonnement ` + planName + `</div>
+          <div class="plan-price">` + amount.toLocaleString('fr-FR') + ` MGA</div>
           <div class="plan-cycle">par mois</div>
         </div>
         <div id="payment-request-button"></div>
-        <div class="divider" id="divider" style="display:none">ou payer par carte</div>
+        <div id="divider" class="divider" style="display:none">ou payer par carte</div>
         <form id="payment-form">
           <div id="payment-element"></div>
-          <button id="submit" type="submit">Payer ${amount.toLocaleString('fr-FR')} MGA</button>
+          <button id="submit" type="submit">Payer ` + amount.toLocaleString('fr-FR') + ` MGA</button>
           <div id="message"></div>
         </form>
         <div class="lock">🔒 Paiement sécurisé par Stripe</div>
       `
-        const stripe   = Stripe(stripeKey)
-        const elements = stripe.elements({ clientSecret, appearance: { theme:'night', variables:{ colorPrimary:'#16f98a', colorBackground:'#1a1a2e', colorText:'#ffffff', colorDanger:'#ff4d6d', borderRadius:'10px' } } })
-        const paymentElement = elements.create('payment', { wallets:{ applePay:'auto', googlePay:'auto' } })
-        paymentElement.mount('#payment-element')
 
-        const pr = stripe.paymentRequest({ country:'MG', currency:'mga', total:{ label:`Payvilus ${planName}`, amount }, requestPayerName:true, requestPayerEmail:true })
-        const prBtn = elements.create('paymentRequestButton', { paymentRequest:pr, style:{ paymentRequestButton:{ theme:'dark', height:'52px' } } })
-        pr.canMakePayment().then(r => { if(r){ document.getElementById('payment-request-button').style.display='block'; document.getElementById('divider').style.display='flex'; prBtn.mount('#payment-request-button') } })
-        pr.on('paymentmethod', async ev => {
-            const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, { payment_method:ev.paymentMethod.id }, { handleActions:false })
-            if(error){ ev.complete('fail'); showMsg(error.message,'error') } else { ev.complete('success'); if(paymentIntent.status==='requires_action') await stripe.confirmCardPayment(clientSecret); notifyRN(paymentIntent.id) }
+        var stripe = Stripe(STRIPE_PK)
+        var elements = stripe.elements({
+            clientSecret: clientSecret,
+            appearance: {
+                theme: 'night',
+                variables: {
+                    colorPrimary: '#16f98a',
+                    colorBackground: '#1a1a2e',
+                    colorText: '#ffffff',
+                    colorDanger: '#ff4d6d',
+                    borderRadius: '10px'
+                }
+            }
         })
-        document.getElementById('payment-form').addEventListener('submit', async e => {
-            e.preventDefault(); setBusy(true)
-            const { error, paymentIntent } = await stripe.confirmPayment({ elements, redirect:'if_required' })
-            if(error){ showMsg(error.message||'Erreur','error'); setBusy(false) }
-            else if(paymentIntent?.status==='succeeded'){ showMsg('Paiement réussi !','success'); setTimeout(()=>notifyRN(paymentIntent.id),800) }
+
+        // Payment Element avec wallets intégrés
+        var pe = elements.create('payment', { wallets: { applePay: 'auto', googlePay: 'auto' } })
+        pe.mount('#payment-element')
+
+        // Payment Request Button (Apple Pay / Google Pay natif)
+        var pr = stripe.paymentRequest({
+            country: 'MG', currency: 'mga',
+            total: { label: 'Payvilus ' + planName, amount: amount },
+            requestPayerName: true, requestPayerEmail: true
         })
-        function notifyRN(piId){ const msg=JSON.stringify({type:'PAYMENT_SUCCESS',paymentIntentId:piId}); if(window.ReactNativeWebView) window.ReactNativeWebView.postMessage(msg) }
-        function showMsg(msg,type){ const el=document.getElementById('message'); el.textContent=msg; el.className=type; el.style.display='block' }
-        function setBusy(b){ const btn=document.getElementById('submit'); btn.disabled=b; btn.textContent=b?'Traitement...':`Payer ${amount.toLocaleString('fr-FR')} MGA` }
+        var prBtn = elements.create('paymentRequestButton', {
+            paymentRequest: pr,
+            style: { paymentRequestButton: { theme: 'dark', height: '52px' } }
+        })
+        pr.canMakePayment().then(function(r) {
+            if (r) {
+                document.getElementById('payment-request-button').style.display = 'block'
+                document.getElementById('divider').style.display = 'flex'
+                prBtn.mount('#payment-request-button')
+            }
+        })
+        pr.on('paymentmethod', function(ev) {
+            stripe.confirmCardPayment(clientSecret, { payment_method: ev.paymentMethod.id }, { handleActions: false })
+                .then(function(res) {
+                    if (res.error) { ev.complete('fail'); showMsg(res.error.message, 'error') }
+                    else {
+                        ev.complete('success')
+                        if (res.paymentIntent.status === 'requires_action') {
+                            stripe.confirmCardPayment(clientSecret).then(function(r2) {
+                                if (!r2.error) notifyRN(r2.paymentIntent.id)
+                            })
+                        } else {
+                            notifyRN(res.paymentIntent.id)
+                        }
+                    }
+                })
+        })
+
+        // Soumission formulaire carte
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault()
+            setBusy(true)
+            stripe.confirmPayment({ elements: elements, redirect: 'if_required' })
+                .then(function(res) {
+                    if (res.error) {
+                        showMsg(res.error.message || 'Une erreur est survenue', 'error')
+                        setBusy(false)
+                    } else if (res.paymentIntent && res.paymentIntent.status === 'succeeded') {
+                        showMsg('Paiement réussi ! ✅', 'success')
+                        setTimeout(function() { notifyRN(res.paymentIntent.id) }, 800)
+                    }
+                })
+        })
+
+        function notifyRN(piId) {
+            var msg = JSON.stringify({ type: 'PAYMENT_SUCCESS', paymentIntentId: piId })
+            if (window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage(msg)
+            } else {
+                console.log('notifyRN (test):', msg)
+            }
+        }
+
+        function showMsg(msg, type) {
+            var el = document.getElementById('message')
+            el.textContent = msg
+            el.className = type
+            el.style.display = 'block'
+        }
+
+        function setBusy(busy) {
+            var btn = document.getElementById('submit')
+            btn.disabled = busy
+            btn.textContent = busy ? 'Traitement...' : 'Payer ' + amount.toLocaleString('fr-FR') + ' MGA'
+        }
     }
 </script>
 </body>
