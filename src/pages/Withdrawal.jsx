@@ -38,7 +38,7 @@ export default function Withdrawal() {
 
     const RATES = {
         EUR: 4600,
-        USD: 4150
+        USD: 4100
     }
 
     const handleAmountChange = (e) => {

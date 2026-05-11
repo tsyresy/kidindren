@@ -7,7 +7,7 @@ export default function TransactionSummary({ formData, calculatedMGA, plan }) {
     if (!formData || !formData.amount) return null
 
     const amount = parseFloat(formData.amount)
-    const rate = formData.currency === 'EUR' ? 4650 : 4400
+    const rate = formData.currency === 'EUR' ? 4600 : 4100
     const baseAmount = amount * rate
     const serviceFee = baseAmount - calculatedMGA
 
